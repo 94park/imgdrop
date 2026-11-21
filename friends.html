@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联系与邀约记录</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --input-bg: #f1f3f5;
+      --text: #111111;
+      --muted: #4b5563;
+      --line: #222222;
+      --soft-line: #b8bec6;
+      --accent: #1d4ed8;
+      --accent-text: #ffffff;
+      --ok: #15803d;
+      --warn: #b45309;
+      --danger: #b91c1c;
+    }
+
+    * {
+      box-sizing: border-box;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px 16px 72px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--line);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 700;
+    }
+
+    .status-line {
+      margin-top: 4px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* 按钮样式：与输入框明确区分 */
+    button {
+      appearance: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 9px 14px;
+      border: 2px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e5e7eb;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-text);
+    }
+
+    button.primary:hover {
+      background: #1e40af;
+      border-color: #1e40af;
+    }
+
+    button.danger {
+      background: var(--danger);
+      border-color: var(--danger);
+      color: #ffffff;
+    }
+
+    button.small {
+      padding: 6px 10px;
+      font-size: 0.88rem;
+    }
+
+    .view-group {
+      display: inline-flex;
+      border: 2px solid var(--line);
+    }
+
+    .view-group button {
+      border: none;
+      border-right: 1px solid var(--line);
+      padding: 8px 12px;
+    }
+
+    .view-group button:last-child {
+      border-right: none;
+    }
+
+    .view-group button.active {
+      background: var(--line);
+      color: #ffffff;
+    }
+
+    /* 顶部简报 */
+    .notice-box {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    /* 板块 */
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 24px 0 10px;
+      padding-left: 10px;
+      border-left: 5px solid var(--line);
+    }
+
+    details.fold-box {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      margin-top: 20px;
+    }
+
+    details.fold-box > summary {
+      padding: 12px 16px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #eef0f3;
+    }
+
+    details.fold-box > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .fold-body {
+      padding: 14px 16px;
+      border-top: 1px solid var(--soft-line);
+    }
+
+    /* 卡片视图 */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card.due {
+      border-color: var(--danger);
+      border-width: 2px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .person-name {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .tag {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border: 1px solid var(--line);
+      background: #f3f4f6;
+      white-space: nowrap;
+    }
+
+    .tag.ok { color: var(--ok); border-color: var(--ok); background: #f0fdf4; }
+    .tag.warn { color: var(--warn); border-color: var(--warn); background: #fffbeb; }
+    .tag.due { color: var(--danger); border-color: var(--danger); background: #fef2f2; }
+
+    .bar-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .bar-bg {
+      width: 100%;
+      height: 12px;
+      background: #e5e7eb;
+      border: 1px solid var(--line);
+    }
+
+    .bar-fill {
+      height: 100%;
+    }
+
+    .last-info {
+      font-size: 0.92rem;
+      color: var(--text);
+      background: #f9fafb;
+      border-left: 3px solid var(--soft-line);
+      padding: 6px 10px;
+    }
+
+    .card-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-btns button {
+      flex: 1;
+    }
+
+    /* 列表视图 */
+    .list-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .row-item {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .row-item.due {
+      border-color: var(--danger);
+    }
+
+    .row-name {
+      font-size: 1.08rem;
+      font-weight: 700;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* 弹窗 */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+
+    .modal-bg.open {
+      display: flex;
+    }
+
+    .modal-panel {
+      width: 100%;
+      max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 2px solid var(--line);
+      padding: 18px;
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--line);
+    }
+
+    .modal-top h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    /* 输入框样式：浅底 + 边框 + 左侧竖线，与按钮明显不同 */
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--input-bg);
+      border: 1px solid var(--soft-line);
+      border-left: 4px solid var(--line);
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+      background: #ffffff;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* 历史记录列表：点击才显示删除，防呆确认 */
+    .history-list {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 2px solid var(--line);
+    }
+
+    .history-entry {
+      border: 1px solid var(--soft-line);
+      background: #fafafa;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .history-entry.expanded {
+      border: 2px solid var(--line);
+      background: #ffffff;
+    }
+
+    .entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .entry-note {
+      margin-top: 4px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .entry-del-box {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--soft-line);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-direction: row-reverse;
+    }
+
+    .empty-msg {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+      .row-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>联系与邀约记录</h1>
+        <div class="status-line" id="syncStatus">本地保存中</div>
+      </div>
+      <div class="toolbar">
+        <div class="view-group">
+          <button id="viewCardBtn" class="active" onclick="switchView('card')">卡片</button>
+          <button id="viewListBtn" onclick="switchView('list')">列表</button>
+        </div>
+        <button class="primary" onclick="openAddModal()">添加人员</button>
+        <button onclick="openSyncModal()">同步设置</button>
+      </div>
+    </header>
+
+    <div class="notice-box" id="topNotice"></div>
+
+    <h2 class="section-title">需主动维系</h2>
+    <div id="activeArea"></div>
+
+    <details class="fold-box" id="frequentFold">
+      <summary>
+        <span>有共同事务频频往来</span>
+        <span id="frequentCount">折叠</span>
+      </summary>
+      <div class="fold-body" id="frequentArea"></div>
+    </details>
+
+    <details class="fold-box" id="holidayFold">
+      <summary>
+        <span>节日问候</span>
+        <span id="holidayCount">折叠</span>
+      </summary>
+      <div class="fold-body" id="holidayArea"></div>
+    </details>
+  </div>
+
+  <!-- 记一次 + 历史记录弹窗 -->
+  <div class="modal-bg" id="recordModal">
+    <div class="modal-panel">
+      <div class="modal-top">
+        <h2 id="recordModalTitle">记一次联系</h2>
+        <button class="small" onclick="closeModal('recordModal')">关闭</button>
+      </div>
+
+      <form onsubmit="saveRecord(event)">
+        <div class="two-col">
+          <div class="field">
+            <label for="recDate">日期（可填过去日期）</label>
+            <input type="date" id="recDate" required />
+          </div>
+          <div class="field">
+            <label for="recMethod">方式</label>
+            <select id="recMethod">
+              <option value="见面">见面</option>
+              <option value="聊天">聊天</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="recNote">简短备注（可不填）</label>
+          <input type="text" id="recNote" placeholder="例如：吃晚饭 / 聊近况" />
+        </div>
+        <button type="submit" class="primary" style="width:100%;">保存记录</button>
+      </form>
+
+      <details class="fold-box" style="margin-top:16px;">
+        <summary>
+          <span>修改板块或间隔天数</span>
+          <span>展开</span>
+        </summary>
+        <div class="fold-body">
+          <div class="two-col">
+            <div class="field">
+              <label for="editGroup">所属板块</label>
+              <select id="editGroup" onchange="toggleDaysField('editGroup', 'editDaysField')">
+                <option value="active">需主动维系</option>
+                <option value="frequent">有共同事务频频往来</option>
+                <option value="holiday">节日问候</option>
+              </select>
+            </div>
+            <div class="field" id="editDaysField">
+              <label for="editDays">建议间隔（天）</label>
+              <input type="number" id="editDays" min="1" max="365" value="30" />
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <button type="button" class="primary small" onclick="updatePersonGroup()">保存设置</button>
+            <button type="button" class="danger small" onclick="removeCurrentPerson()">删除此人</button>
+          </div>
+        </div>
+      </details>
+
+      <div class="history-list">
+        <div style="font-weight:700; margin-bottom:6px;">历史记录（点某条可显示删除）</div>
+        <div id="historyArea"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加人员弹窗 -->
+  <div class="modal-bg" id="addModal">
+    <div class="modal-panel">
+      <div class="modal-top">
+        <h2>添加人员</h2>
+        <button class="small" onclick="closeModal('addModal')">关闭</button>
+      </div>
+      <form onsubmit="createPerson(event)">
+        <div class="field">
+          <label for="addName">姓名或称呼</label>
+          <input type="text" id="addName" required placeholder="例如：张明 / 李老师" />
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label for="addGroup">所属板块</label>
+            <select id="addGroup" onchange="toggleDaysField('addGroup', 'addDaysField')">
+              <option value="active">需主动维系</option>
+              <option value="frequent">有共同事务频频往来</option>
+              <option value="holiday">节日问候</option>
+            </select>
+          </div>
+          <div class="field" id="addDaysField">
+            <label for="addDays">建议间隔（天）</label>
+            <input type="number" id="addDays" min="1" max="365" value="30" />
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label for="addDate">上次联系日期</label>
+            <input type="date" id="addDate" required />
+          </div>
+          <div class="field">
+            <label for="addMethod">上次方式</label>
+            <select id="addMethod">
+              <option value="见面">见面</option>
+              <option value="聊天">聊天</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="addNote">备注（可不填）</label>
+          <input type="text" id="addNote" placeholder="可留空" />
+        </div>
+        <button type="submit" class="primary" style="width:100%;">确认添加</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- GitHub Gist 同步设置弹窗 -->
+  <div class="modal-bg" id="syncModal">
+    <div class="modal-panel">
+      <div class="modal-top">
+        <h2>GitHub Gist 同步设置</h2>
+        <button class="small" onclick="closeModal('syncModal')">关闭</button>
+      </div>
+      <p style="font-size:0.92rem; color:var(--muted); margin-top:0;">
+        填入仅勾选 <code>gist</code> 权限的 GitHub Token 与私有 Gist ID。留空则仅保存在当前浏览器。
+      </p>
+      <form onsubmit="saveGistConfig(event)">
+        <div class="field">
+          <label for="gistToken">GitHub Token</label>
+          <input type="password" id="gistToken" placeholder="ghp_..." />
+        </div>
+        <div class="field">
+          <label for="gistId">Gist ID</label>
+          <input type="text" id="gistId" placeholder="Gist 网址末尾的一串字符" />
+        </div>
+        <div class="field">
+          <label for="gistFile">Gist 文件名（默认 contacts.json）</label>
+          <input type="text" id="gistFile" placeholder="contacts.json" />
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button type="submit" class="primary">保存并拉取</button>
+          <button type="button" onclick="pullGist(true)">立即同步</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const DATA_KEY = "contacts_tracker_data_v1";
+    const GIST_KEY = "contacts_tracker_gist_v1";
+    const VIEW_KEY = "contacts_tracker_view_v1";
+
+    let currentPersonId = null;
+    let expandedLogIndex = null;
+    let armedDeleteIndex = null;
+    let currentView = localStorage.getItem(VIEW_KEY) || "card";
+
+    const FESTIVALS = [
+      { name: "元旦", date: "2027-01-01" },
+      { name: "春节", date: "2027-02-06" },
+      { name: "清明节", date: "2027-04-05" },
+      { name: "端午节", date: "2027-06-09" },
+      { name: "中秋节", date: "2027-09-15" },
+      { name: "国庆节", date: "2027-10-01" }
+    ];
+
+    const SEED_DATA = [
+      {
+        id: "p-1",
+        name: "高屿",
+        group: "active",
+        days: 30,
+        lastDate: "2026-10-12",
+        logs: [
+          { date: "2026-10-12", method: "见面", note: "晚饭，聊了近况" },
+          { date: "2026-09-10", method: "聊天", note: "聊了看过的书" }
+        ]
+      },
+      {
+        id: "p-2",
+        name: "杨柳",
+        group: "frequent",
+        days: 30,
+        lastDate: "2026-11-18",
+        logs: [
+          { date: "2026-11-18", method: "见面", note: "一起推进项目" }
+        ]
+      },
+      {
+        id: "p-3",
+        name: "李老师",
+        group: "holiday",
+        days: 30,
+        lastDate: "2026-09-25",
+        logs: [
+          { date: "2026-09-25", method: "聊天", note: "中秋问候" }
+        ]
+      }
+    ];
+
+    function todayStr() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    }
+
+    function toLocalDate(s) {
+      const [y, m, d] = s.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function daysBetween(aStr, bStr) {
+      return Math.floor((toLocalDate(bStr).getTime() - toLocalDate(aStr).getTime()) / 86400000);
+    }
+
+    function escapeText(v) {
+      return String(v ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function normalizePerson(p) {
+      const logs = [...(p.logs || [])]
+        .map(x => ({
+          date: x.date || todayStr(),
+          method: x.method === "见面" ? "见面" : "聊天",
+          note: x.note || ""
+        }))
+        .sort((a, b) => b.date.localeCompare(a.date));
+
+      const group = ["active", "frequent", "holiday"].includes(p.group) ? p.group : "active";
+      const days = Number(p.days) > 0 ? Number(p.days) : 30;
+      const lastDate = logs.length > 0 ? logs[0].date : (p.lastDate || todayStr());
+
+      return { ...p, group, days, lastDate, logs };
+    }
+
+    function loadPeople() {
+      try {
+        const raw = localStorage.getItem(DATA_KEY);
+        if (!raw) return SEED_DATA.map(normalizePerson);
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr.map(normalizePerson) : SEED_DATA.map(normalizePerson);
+      } catch {
+        return SEED_DATA.map(normalizePerson);
+      }
+    }
+
+    function getGistConfig() {
+      try {
+        const cfg = JSON.parse(localStorage.getItem(GIST_KEY) || "{}");
+        return {
+          token: (cfg.token || "").trim(),
+          gistId: (cfg.gistId || "").trim(),
+          fileName: (cfg.fileName || "contacts.json").trim() || "contacts.json"
+        };
+      } catch {
+        return { token: "", gistId: "", fileName: "contacts.json" };
+      }
+    }
+
+    function setStatus(msg) {
+      document.getElementById("syncStatus").textContent = msg;
+    }
+
+    async function savePeople(list, skipGist = false) {
+      const clean = list.map(normalizePerson);
+      localStorage.setItem(DATA_KEY, JSON.stringify(clean));
+      if (!skipGist) {
+        await pushGist(clean);
+      }
+    }
+
+    function gistHeaders(token) {
+      const h = { Accept: "application/vnd.github+json" };
+      if (token) {
+        h.Authorization = `Bearer ${token}`;
+      }
+      return h;
+    }
+
+    async function pullGist(showTip = false) {
+      const cfg = getGistConfig();
+      if (!cfg.token || !cfg.gistId) {
+        setStatus("未配置 Gist，仅保存在本机");
+        return;
+      }
+      setStatus("正在读取 Gist...");
+      try {
+        const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(cfg.gistId)}`, {
+          method: "GET",
+          headers: gistHeaders(cfg.token)
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const gist = await res.json();
+        const fileObj = gist.files?.[cfg.fileName] || Object.values(gist.files || {})[0];
+        if (!fileObj || typeof fileObj.content !== "string") {
+          throw new Error("未找到对应文件");
+        }
+        const parsed = JSON.parse(fileObj.content);
+        if (Array.isArray(parsed)) {
+          await savePeople(parsed, true);
+          renderAll();
+        }
+        setStatus(`已同步 Gist（${new Date().toTimeString().slice(0, 5)}）`);
+        if (showTip) alert("同步成功");
+      } catch {
+        setStatus("Gist 读取失败，使用本机数据");
+        if (showTip) alert("读取失败，请检查 Token、Gist ID 与文件名是否正确");
+      }
+    }
+
+    async function pushGist(list) {
+      const cfg = getGistConfig();
+      if (!cfg.token || !cfg.gistId) return;
+      setStatus("正在写入 Gist...");
+      try {
+        const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(cfg.gistId)}`, {
+          method: "PATCH",
+          headers: {
+            ...gistHeaders(cfg.token),
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            files: {
+              [cfg.fileName]: {
+                content: JSON.stringify(list, null, 2)
+              }
+            }
+          })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setStatus(`已保存至 Gist（${new Date().toTimeString().slice(0, 5)}）`);
+      } catch {
+        setStatus("Gist 写入失败，已保留在本机");
+      }
+    }
+
+    function getFestivalInfo(person, now) {
+      const next = FESTIVALS
+        .map(f => ({ ...f, left: daysBetween(now, f.date) }))
+        .filter(f => f.left >= 0)
+        .sort((a, b) => a.left - b.left)[0];
+
+      if (!next) {
+        return { due: false, percent: 0, badge: "无近期节日", sub: "等待节日" };
+      }
+
+      const d = toLocalDate(next.date);
+      d.setDate(d.getDate() - 7);
+      const winStart = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const greeted = person.lastDate >= winStart;
+
+      if (next.left <= 7 && !greeted) {
+        return { due: true, percent: 100, badge: `距${next.name} ${next.left}天`, sub: "建议发问候" };
+      }
+      return {
+        due: false,
+        percent: 0,
+        badge: `${next.name}还有 ${next.left}天`,
+        sub: greeted ? "本次已问候" : "未到提醒期"
+      };
+    }
+
+    function switchView(v) {
+      currentView = v;
+      localStorage.setItem(VIEW_KEY, v);
+      document.getElementById("viewCardBtn").classList.toggle("active", v === "card");
+      document.getElementById("viewListBtn").classList.toggle("active", v === "list");
+      renderAll();
+    }
+
+    function renderPersonItem(item) {
+      const { person, due, percent, color, tagClass, tagText, leftText, rightText, extraBtn } = item;
+      const latest = person.logs[0];
+      const latestStr = latest
+        ? `${latest.date} · ${latest.method}${latest.note ? `：${latest.note}` : ""}`
+        : `上次：${person.lastDate}`;
+
+      if (currentView === "list") {
+        return `
+          <div class="row-item ${due ? "due" : ""}">
+            <div>
+              <div class="row-name">${escapeText(person.name)}</div>
+              <span class="tag ${tagClass}">${escapeText(tagText)}</span>
+            </div>
+            <div>
+              <div class="bar-text">
+                <span>${escapeText(leftText)}</span>
+                <span>${escapeText(rightText)}</span>
+              </div>
+              <div class="bar-bg"><div class="bar-fill" style="width:${percent}%; background:${color};"></div></div>
+              <div class="last-info" style="margin-top:6px;">${escapeText(latestStr)}</div>
+            </div>
+            <div class="row-actions">
+              <button class="primary small" onclick="openRecordModal('${person.id}')">记一次（${person.logs.length}）</button>
+              ${extraBtn || ""}
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="card ${due ? "due" : ""}">
+          <div class="card-head">
+            <h3 class="person-name">${escapeText(person.name)}</h3>
+            <span class="tag ${tagClass}">${escapeText(tagText)}</span>
+          </div>
+          <div>
+            <div class="bar-text">
+              <span>${escapeText(leftText)}</span>
+              <span>${escapeText(rightText)}</span>
+            </div>
+            <div class="bar-bg"><div class="bar-fill" style="width:${percent}%; background:${color};"></div></div>
+          </div>
+          <div class="last-info">${escapeText(latestStr)}</div>
+          <div class="card-btns">
+            <button class="primary small" onclick="openRecordModal('${person.id}')">记一次（${person.logs.length}）</button>
+            ${extraBtn || ""}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSection(el, items, emptyText) {
+      if (items.length === 0) {
+        el.innerHTML = `<p class="empty-msg">${escapeText(emptyText)}</p>`;
+        return;
+      }
+      const cls = currentView === "list" ? "list-wrap" : "cards-grid";
+      el.innerHTML = `<div class="${cls}">${items.map(renderPersonItem).join("")}</div>`;
+    }
+
+    async function moveToActive(personId) {
+      const list = loadPeople();
+      const idx = list.findIndex(x => x.id === personId);
+      if (idx === -1) return;
+      list[idx].group = "active";
+      await savePeople(list);
+      renderAll();
+    }
+
+    function renderAll() {
+      const now = todayStr();
+      const people = loadPeople();
+
+      const activeItems = [];
+      const frequentItems = [];
+      const holidayItems = [];
+      let dueTotal = 0;
+      let holidayDueTotal = 0;
+
+      for (const p of people) {
+        const elapsed = Math.max(0, daysBetween(p.lastDate, now));
+
+        if (p.group === "holiday") {
+          const info = getFestivalInfo(p, now);
+          if (info.due) holidayDueTotal++;
+          holidayItems.push({
+            person: p,
+            due: info.due,
+            sortKey: info.due ? 1 : 0,
+            percent: info.percent,
+            color: info.due ? "var(--danger)" : "var(--accent)",
+            tagClass: info.due ? "due" : "",
+            tagText: info.badge,
+            leftText: `上次 ${elapsed} 天前`,
+            rightText: info.sub
+          });
+        } else if (p.group === "frequent") {
+          frequentItems.push({
+            person: p,
+            due: false,
+            sortKey: -elapsed,
+            percent: 100,
+            color: "#374151",
+            tagClass: "",
+            tagText: "频频往来",
+            leftText: `上次 ${elapsed} 天前`,
+            rightText: "暂不提醒",
+            extraBtn: `<button class="small" onclick="moveToActive('${p.id}')">转入需维系</button>`
+          });
+        } else {
+          const ratio = elapsed / p.days;
+          const percent = Math.min(100, Math.round(ratio * 100));
+          let due = false;
+          let tagClass = "ok";
+          let tagText = `还剩 ${Math.max(0, p.days - elapsed)} 天`;
+          let color = "var(--ok)";
+
+          if (elapsed > p.days) {
+            due = true;
+            dueTotal++;
+            tagClass = "due";
+            tagText = `已超 ${elapsed - p.days} 天`;
+            color = "var(--danger)";
+          } else if (ratio >= 0.7) {
+            tagClass = "warn";
+            color = "var(--warn)";
+          }
+
+          activeItems.push({
+            person: p,
+            due,
+            sortKey: ratio,
+            percent,
+            color,
+            tagClass,
+            tagText,
+            leftText: `已过 ${elapsed} 天 / 间隔 ${p.days} 天`,
+            rightText: `${percent}%`
+          });
+        }
+      }
+
+      activeItems.sort((a, b) => b.sortKey - a.sortKey);
+      frequentItems.sort((a, b) => b.sortKey - a.sortKey);
+      holidayItems.sort((a, b) => b.sortKey - a.sortKey);
+
+      document.getElementById("topNotice").textContent = dueTotal > 0
+        ? `今天是 ${now}。有 ${dueTotal} 位「需主动维系」的朋友超过建议间隔，可以约见或聊天。`
+        : `今天是 ${now}。当前没有超期的朋友。`;
+
+      renderSection(
+        document.getElementById("activeArea"),
+        activeItems,
+        "还没有「需主动维系」的人员，点击右上角「添加人员」。"
+      );
+
+      document.getElementById("frequentCount").textContent = `${frequentItems.length} 人`;
+      renderSection(
+        document.getElementById("frequentArea"),
+        frequentItems,
+        "暂无「有共同事务频频往来」的人员。"
+      );
+
+      document.getElementById("holidayCount").textContent = holidayDueTotal > 0
+        ? `${holidayDueTotal} 人待问候`
+        : `${holidayItems.length} 人`;
+      if (holidayDueTotal > 0) {
+        document.getElementById("holidayFold").open = true;
+      }
+      renderSection(
+        document.getElementById("holidayArea"),
+        holidayItems,
+        "暂无「节日问候」的人员。"
+      );
+    }
+
+    function openRecordModal(personId) {
+      currentPersonId = personId;
+      expandedLogIndex = null;
+      armedDeleteIndex = null;
+
+      const person = loadPeople().find(x => x.id === personId);
+      if (!person) return;
+
+      document.getElementById("recordModalTitle").textContent = `${person.name} · 记录与往来`;
+      document.getElementById("recDate").value = todayStr();
+      document.getElementById("recMethod").value = "见面";
+      document.getElementById("recNote").value = "";
+
+      document.getElementById("editGroup").value = person.group;
+      document.getElementById("editDays").value = person.days;
+      toggleDaysField("editGroup", "editDaysField");
+
+      renderHistory(person);
+      document.getElementById("recordModal").classList.add("open");
+    }
+
+    function renderHistory(person) {
+      const area = document.getElementById("historyArea");
+      if (!person.logs || person.logs.length === 0) {
+        area.innerHTML = `<p class="empty-msg">暂无记录。</p>`;
+        return;
+      }
+
+      area.innerHTML = person.logs.map((log, idx) => {
+        const isExpanded = expandedLogIndex === idx;
+        const isArmed = armedDeleteIndex === idx;
+        return `
+          <div class="history-entry ${isExpanded ? "expanded" : ""}" onclick="toggleEntry(${idx})">
+            <div class="entry-head">
+              <span>${escapeText(log.date)} · ${escapeText(log.method)}</span>
+              <span style="font-size:0.82rem; color:var(--muted);">${isExpanded ? "收起" : "点击可删"}</span>
+            </div>
+            <div class="entry-note">${log.note ? escapeText(log.note) : "无备注"}</div>
+            ${isExpanded ? `
+              <div class="entry-del-box" onclick="event.stopPropagation()">
+                ${!isArmed
+                  ? `<button type="button" class="danger small" onclick="armDelete(${idx})">删除这条</button>`
+                  : `<button type="button" class="danger small" onclick="confirmDeleteLog(${idx})">确认删除</button>
+                     <button type="button" class="small" onclick="cancelDelete()">取消</button>`
+                }
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleEntry(idx) {
+      armedDeleteIndex = null;
+      expandedLogIndex = expandedLogIndex === idx ? null : idx;
+      const person = loadPeople().find(x => x.id === currentPersonId);
+      if (person) renderHistory(person);
+    }
+
+    function armDelete(idx) {
+      armedDeleteIndex = idx;
+      const person = loadPeople().find(x => x.id === currentPersonId);
+      if (person) renderHistory(person);
+    }
+
+    function cancelDelete() {
+      armedDeleteIndex = null;
+      const person = loadPeople().find(x => x.id === currentPersonId);
+      if (person) renderHistory(person);
+    }
+
+    async function confirmDeleteLog(idx) {
+      const list = loadPeople();
+      const pIdx = list.findIndex(x => x.id === currentPersonId);
+      if (pIdx === -1) return;
+
+      list[pIdx].logs.splice(idx, 1);
+      expandedLogIndex = null;
+      armedDeleteIndex = null;
+      await savePeople(list);
+
+      renderHistory(normalizePerson(list[pIdx]));
+      renderAll();
+    }
+
+    async function saveRecord(e) {
+      e.preventDefault();
+      const date = document.getElementById("recDate").value;
+      const method = document.getElementById("recMethod").value;
+      const note = document.getElementById("recNote").value.trim();
+      if (!date || !currentPersonId) return;
+
+      const list = loadPeople();
+      const pIdx = list.findIndex(x => x.id === currentPersonId);
+      if (pIdx === -1) return;
+
+      list[pIdx].logs.push({ date, method, note });
+      expandedLogIndex = null;
+      armedDeleteIndex = null;
+      await savePeople(list);
+
+      document.getElementById("recNote").value = "";
+      renderHistory(normalizePerson(list[pIdx]));
+      renderAll();
+    }
+
+    function toggleDaysField(selectId, fieldId) {
+      const val = document.getElementById(selectId).value;
+      document.getElementById(fieldId).style.display = val === "active" ? "block" : "none";
+    }
+
+    async function updatePersonGroup() {
+      if (!currentPersonId) return;
+      const group = document.getElementById("editGroup").value;
+      const days = Number(document.getElementById("editDays").value) || 30;
+
+      const list = loadPeople();
+      const pIdx = list.findIndex(x => x.id === currentPersonId);
+      if (pIdx === -1) return;
+
+      list[pIdx].group = group;
+      list[pIdx].days = days;
+      await savePeople(list);
+      renderAll();
+      alert("已更新");
+    }
+
+    async function removeCurrentPerson() {
+      if (!currentPersonId) return;
+      const list = loadPeople();
+      const target = list.find(x => x.id === currentPersonId);
+      if (!target) return;
+      if (!confirm(`确定删除「${target.name}」吗？`)) return;
+
+      const next = list.filter(x => x.id !== currentPersonId);
+      currentPersonId = null;
+      await savePeople(next);
+      closeModal("recordModal");
+      renderAll();
+    }
+
+    function openAddModal() {
+      document.getElementById("addName").value = "";
+      document.getElementById("addGroup").value = "active";
+      document.getElementById("addDays").value = "30";
+      document.getElementById("addDate").value = todayStr();
+      document.getElementById("addMethod").value = "见面";
+      document.getElementById("addNote").value = "";
+      toggleDaysField("addGroup", "addDaysField");
+      document.getElementById("addModal").classList.add("open");
+    }
+
+    async function createPerson(e) {
+      e.preventDefault();
+      const name = document.getElementById("addName").value.trim();
+      const group = document.getElementById("addGroup").value;
+      const days = Number(document.getElementById("addDays").value) || 30;
+      const date = document.getElementById("addDate").value || todayStr();
+      const method = document.getElementById("addMethod").value;
+      const note = document.getElementById("addNote").value.trim();
+      if (!name) return;
+
+      const list = loadPeople();
+      list.push(normalizePerson({
+        id: "p-" + Date.now(),
+        name,
+        group,
+        days,
+        lastDate: date,
+        logs: [{ date, method, note }]
+      }));
+
+      await savePeople(list);
+      closeModal("addModal");
+      renderAll();
+    }
+
+    function openSyncModal() {
+      const cfg = getGistConfig();
+      document.getElementById("gistToken").value = cfg.token;
+      document.getElementById("gistId").value = cfg.gistId;
+      document.getElementById("gistFile").value = cfg.fileName;
+      document.getElementById("syncModal").classList.add("open");
+    }
+
+    async function saveGistConfig(e) {
+      e.preventDefault();
+      const token = document.getElementById("gistToken").value.trim();
+      const gistId = document.getElementById("gistId").value.trim();
+      const fileName = document.getElementById("gistFile").value.trim() || "contacts.json";
+      localStorage.setItem(GIST_KEY, JSON.stringify({ token, gistId, fileName }));
+      closeModal("syncModal");
+      await pullGist(true);
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+
+    renderAll();
+    pullGist(false);
+  </script>
+</body>
+</html>
