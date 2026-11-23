@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>联系与邀约记录</title>
+  <title>友人帐</title>
   <style>
     :root {
       --bg: #f4f5f7;
@@ -13,11 +13,17 @@
       --muted: #4b5563;
       --line: #222222;
       --soft-line: #b8bec6;
-      --accent: #1d4ed8;
+      --accent: #1e40af;
+      /* --accent: #1d4ed8; */
       --accent-text: #ffffff;
-      --ok: #15803d;
+      --ok: #047857;
+      --ok-bg: #ecfdf5;
       --warn: #b45309;
+      --warn-bg: #fffbeb;
       --danger: #b91c1c;
+      --danger-bg: #fef2f2;
+      --plan: #6d28d9;
+      --plan-bg: #f5f3ff;
     }
 
     * {
@@ -32,13 +38,13 @@
       background: var(--bg);
       color: var(--text);
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.55;
     }
 
     .container {
-      max-width: 980px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 20px 16px 72px;
+      padding: 20px 16px 80px;
     }
 
     header {
@@ -49,7 +55,7 @@
       gap: 12px;
       padding-bottom: 14px;
       border-bottom: 2px solid var(--line);
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
     h1 {
@@ -59,25 +65,24 @@
     }
 
     .status-line {
-      margin-top: 4px;
-      font-size: 0.9rem;
+      margin-top: 2px;
+      font-size: 0.85rem;
       color: var(--muted);
     }
 
     .toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
     }
 
-    /* 按钮样式：与输入框明确区分 */
     button {
       appearance: none;
       font-family: inherit;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
-      padding: 9px 14px;
+      padding: 8px 13px;
       border: 2px solid var(--line);
       background: var(--surface);
       color: var(--text);
@@ -95,8 +100,10 @@
     }
 
     button.primary:hover {
-      background: #1e40af;
-      border-color: #1e40af;
+      /* background: #1e40af;
+      border-color: #1e40af; */
+      background: #173189;
+      border-color: #173189;
     }
 
     button.danger {
@@ -105,9 +112,15 @@
       color: #ffffff;
     }
 
+    button.plan-btn {
+      color: var(--plan);
+      border-color: var(--plan);
+      background: var(--plan-bg);
+    }
+
     button.small {
-      padding: 6px 10px;
-      font-size: 0.88rem;
+      padding: 5px 9px;
+      font-size: 0.85rem;
     }
 
     .view-group {
@@ -118,7 +131,7 @@
     .view-group button {
       border: none;
       border-right: 1px solid var(--line);
-      padding: 8px 12px;
+      padding: 7px 11px;
     }
 
     .view-group button:last-child {
@@ -130,33 +143,110 @@
       color: #ffffff;
     }
 
-    /* 顶部简报 */
     .notice-box {
-      background: var(--surface);
-      border: 2px solid var(--line);
-      padding: 12px 16px;
-      margin-bottom: 20px;
-      font-size: 1rem;
+      padding: 10px 0px;
+      margin-bottom: 12px;
+      font-size: 0.96rem;
     }
 
-    /* 板块 */
+    .pending-box {
+      background: var(--warn-bg);
+      border: 2px solid var(--warn);
+      padding: 12px 15px;
+      margin-bottom: 14px;
+    }
+
+    .pending-item {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-top: 1px dashed var(--warn);
+    }
+
+    .pending-item:first-of-type {
+      border-top: none;
+      padding-top: 4px;
+    }
+
+    /* 折叠筛选区 */
+    details.filter-fold {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      margin-bottom: 16px;
+    }
+
+    details.filter-fold > summary {
+      padding: 9px 14px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #eef0f3;
+    }
+
+    details.filter-fold > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .filter-body {
+      padding: 12px 14px;
+      border-top: 1px solid var(--soft-line);
+      display: grid;
+      grid-template-columns: 1fr 220px auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .tag-chips {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .chip-btn {
+      padding: 3px 9px;
+      font-size: 0.82rem;
+      border: 1px solid var(--line);
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+
+    .chip-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
     .section-title {
       font-size: 1.15rem;
       font-weight: 700;
-      margin: 24px 0 10px;
+      margin: 22px 0 10px;
       padding-left: 10px;
       border-left: 5px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     details.fold-box {
       background: var(--surface);
       border: 2px solid var(--line);
-      margin-top: 20px;
+      margin-top: 16px;
     }
 
     details.fold-box > summary {
-      padding: 12px 16px;
-      font-size: 1.05rem;
+      padding: 11px 15px;
+      font-size: 1.02rem;
       font-weight: 700;
       cursor: pointer;
       list-style: none;
@@ -171,35 +261,52 @@
     }
 
     .fold-body {
-      padding: 14px 16px;
+      padding: 14px 15px;
       border-top: 1px solid var(--soft-line);
     }
 
-    /* 卡片视图 */
+    details.fold-box#planFold {
+      border-color: var(--plan);
+    }
+    details.fold-box#planFold > summary {
+      color: var(--plan);
+      background: var(--plan-bg);
+    }
+    details.fold-box#planFold > summary,
+    details.fold-box#infoFold > summary {
+      font-weight: normal;
+    }
+
+    /* 卡片视图：严格分两区（上区：个人静态档案，下区：动态时间与联系） */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
       gap: 14px;
     }
 
     .card {
       background: var(--surface);
       border: 2px solid var(--line);
-      padding: 14px;
+      padding: 13px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       gap: 10px;
     }
 
-    .card.due {
-      border-color: var(--danger);
-      border-width: 2px;
+    .card.due { border-color: var(--danger); }
+    .card.planned { border-color: var(--plan); }
+
+    .card-profile-zone {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .card-head {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
+      align-items: center;
       gap: 8px;
     }
 
@@ -209,49 +316,105 @@
       font-weight: 700;
     }
 
-    .tag {
-      font-size: 0.85rem;
+    .status-badge {
+      font-size: 0.82rem;
       font-weight: 700;
       padding: 2px 8px;
-      border: 1px solid var(--line);
+      border: 1.5px solid var(--line);
       background: #f3f4f6;
       white-space: nowrap;
     }
 
-    .tag.ok { color: var(--ok); border-color: var(--ok); background: #f0fdf4; }
-    .tag.warn { color: var(--warn); border-color: var(--warn); background: #fffbeb; }
-    .tag.due { color: var(--danger); border-color: var(--danger); background: #fef2f2; }
+    .status-badge.ok { color: var(--ok); border-color: var(--ok); background: var(--ok-bg); }
+    .status-badge.warn { color: var(--warn); border-color: var(--warn); background: var(--warn-bg); }
+    .status-badge.due { color: var(--danger); border-color: var(--danger); background: var(--danger-bg); }
+    .status-badge.plan { color: var(--plan); border-color: var(--plan); background: var(--plan-bg); }
 
-    .bar-text {
+    /* 独立标签样式：与状态徽章、动态记录彻底区分 */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .person-tag {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      background: #eef2ff;
+      color: #1e3a8a;
+      border: 1px solid #93c5fd;
+    }
+
+    /* 独立个人备注样式：浅灰底+左侧实线，与时间记录区分 */
+    .person-memo {
+      font-size: 0.86rem;
+      color: #374151;
+      background: #f3f4f6;
+      padding: 4px 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 动态区分隔线 */
+    .card-activity-zone {
+      border-top: 1px dashed var(--soft-line);
+      padding-top: 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    /* 图形化进度条 */
+    .progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .progress-labels {
       display: flex;
       justify-content: space-between;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--muted);
-      margin-bottom: 4px;
+      font-weight: 600;
     }
 
     .bar-bg {
       width: 100%;
       height: 12px;
       background: #e5e7eb;
-      border: 1px solid var(--line);
+      border: 1.5px solid var(--line);
+      overflow: hidden;
     }
 
     .bar-fill {
       height: 100%;
+      transition: width 0.2s ease;
     }
 
-    .last-info {
-      font-size: 0.92rem;
-      color: var(--text);
-      background: #f9fafb;
-      border-left: 3px solid var(--soft-line);
-      padding: 6px 10px;
+    .activity-box {
+      font-size: 0.86rem;
+      /* padding: 4px 8px; */
+      /* border: 1px solid var(--soft-line); */
+      background: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity-box.plan-box {
+      border: 1.5px solid var(--plan);
+      background: var(--plan-bg);
+      color: var(--plan);
+      font-weight: 700;
     }
 
     .card-btns {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
@@ -269,15 +432,30 @@
     .row-item {
       background: var(--surface);
       border: 2px solid var(--line);
-      padding: 12px 14px;
+      padding: 11px 14px;
       display: grid;
-      grid-template-columns: 120px 1fr auto;
-      gap: 12px;
+      grid-template-columns: 210px 1fr auto;
+      gap: 14px;
       align-items: center;
     }
 
-    .row-item.due {
-      border-color: var(--danger);
+    .row-item.due { border-color: var(--danger); }
+    .row-item.planned { border-color: var(--plan); }
+
+    .row-profile {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      border-right: 1px dashed var(--soft-line);
+      padding-right: 12px;
+      min-width: 0;
+    }
+
+    .row-name-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
     }
 
     .row-name {
@@ -285,10 +463,79 @@
       font-weight: 700;
     }
 
+    .row-activity {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
     .row-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
+      flex-direction: row-reverse;
+    }
+
+    /* 精简视图：纯姓名 + 状态 + 操作，无标签无备注 */
+    .compact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+    }
+
+    .compact-item {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .fold-body .compact-item {
+      border-color:  var(--soft-line);
+    }
+
+    @media only screen and (max-width: 760px) {
+      .compact-item {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .compact-actions {
+        max-width: 50%;
+        flex-direction: row-reverse;
+        justify-content: flex-start;
+      }
+    }
+
+    .compact-item.due { border-color: var(--danger); }
+    .compact-item.planned { border-color: var(--plan); }
+
+    .compact-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .compact-name {
+      font-weight: 700;
+      font-size: 1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .compact-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .compact-actions button {
+      flex: 1;
+      padding: 5px 8px;
+      font-size: 0.84rem;
     }
 
     /* 弹窗 */
@@ -309,7 +556,7 @@
 
     .modal-panel {
       width: 100%;
-      max-width: 540px;
+      max-width: 560px;
       max-height: 90vh;
       overflow-y: auto;
       background: var(--surface);
@@ -333,33 +580,44 @@
     }
 
     .field {
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .field label {
       display: block;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
-    /* 输入框样式：浅底 + 边框 + 左侧竖线，与按钮明显不同 */
+    @media (max-width: 760px) {
+      .two-col {
+        margin-bottom: 12px;
+      }
+    }
+
     input[type="text"],
     input[type="number"],
     input[type="date"],
     input[type="password"],
-    select {
+    select,
+    textarea {
       width: 100%;
-      padding: 9px 12px;
+      padding: 8px 11px;
       font-family: inherit;
-      font-size: 1rem;
+      font-size: 0.96rem;
       color: var(--text);
       background: var(--input-bg);
       border: 1px solid var(--soft-line);
       border-left: 4px solid var(--line);
     }
 
-    input:focus, select:focus {
+    textarea {
+      min-height: 64px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
       outline: 2px solid var(--accent);
       outline-offset: 1px;
       background: #ffffff;
@@ -371,18 +629,51 @@
       gap: 12px;
     }
 
-    /* 历史记录列表：点击才显示删除，防呆确认 */
+    .plan-banner {
+      border: 2px solid var(--plan);
+      color: var(--plan);
+      background: var(--plan-bg);
+      padding: 10px 12px;
+      margin-bottom: 14px;
+    }
+
+    .backup-box {
+      border: 2px solid var(--line);
+      background: #f8fafc;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .check-list {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 1px solid var(--soft-line);
+      padding: 8px 10px;
+      background: #fafafa;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 6px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+
     .history-list {
       margin-top: 16px;
       padding-top: 14px;
-      border-top: 2px solid var(--line);
+      border-top: 2px dotted var(--soft-line);
     }
 
     .history-entry {
       border: 1px solid var(--soft-line);
       background: #fafafa;
-      padding: 10px 12px;
-      margin-bottom: 10px;
+      padding: 9px 12px;
+      margin-bottom: 8px;
       cursor: pointer;
     }
 
@@ -397,17 +688,17 @@
       align-items: center;
       gap: 8px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
 
     .entry-note {
-      margin-top: 4px;
-      font-size: 0.92rem;
+      margin-top: 3px;
+      font-size: 0.88rem;
       color: var(--muted);
     }
 
     .entry-del-box {
-      margin-top: 10px;
+      margin-top: 8px;
       padding-top: 8px;
       border-top: 1px dashed var(--soft-line);
       display: flex;
@@ -419,15 +710,21 @@
     .empty-msg {
       margin: 0;
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.94rem;
     }
 
-    @media (max-width: 640px) {
-      .two-col {
+    @media (max-width: 760px) {
+      .two-col, .filter-body {
         grid-template-columns: 1fr;
       }
       .row-item {
         grid-template-columns: 1fr;
+      }
+      .row-profile {
+        border-right: none;
+        border-bottom: 1px dashed var(--soft-line);
+        padding-right: 0;
+        padding-bottom: 8px;
       }
     }
   </style>
@@ -436,28 +733,58 @@
   <div class="container">
     <header>
       <div>
-        <h1>联系与邀约记录</h1>
+        <h1>友人帐</h1>
         <div class="status-line" id="syncStatus">本地保存中</div>
       </div>
       <div class="toolbar">
         <div class="view-group">
-          <button id="viewCardBtn" class="active" onclick="switchView('card')">卡片</button>
+          <button id="viewCardBtn" onclick="switchView('card')">卡片</button>
           <button id="viewListBtn" onclick="switchView('list')">列表</button>
+          <button id="viewCompactBtn" onclick="switchView('compact')">精简</button>
         </div>
         <button class="primary" onclick="openAddModal()">添加人员</button>
-        <button onclick="openSyncModal()">同步设置</button>
+        <button onclick="openBatchModal()">批量记记录</button>
+        <button onclick="openSyncModal()">备份与同步</button>
       </div>
     </header>
 
     <div class="notice-box" id="topNotice"></div>
 
-    <h2 class="section-title">需主动维系</h2>
+    <!-- 过期未核对的未来预定 -->
+    <div class="pending-box" id="overduePlansBox" style="display:none;">
+      <div style="font-weight:700; color:var(--warn); margin-bottom:4px;">📅 已过预定日期，请确认：</div>
+      <div id="overduePlansList"></div>
+    </div>
+
+    <!-- 折叠的检索与标签筛选 -->
+    <details class="filter-fold" id="filterFold">
+      <summary>
+        <span>🔍 查找与地点/标签筛选</span>
+        <span id="filterSummaryBadge" style="font-size:0.84rem; color:var(--muted);">全部</span>
+      </summary>
+      <div class="filter-body">
+        <input type="text" id="searchInput" oninput="renderAll()" placeholder="输入姓名、地点/标签或备注..." />
+        <select id="tagFilter" onchange="renderAll()">
+          <option value="">全部地点 / 标签</option>
+        </select>
+        <div class="tag-chips" id="quickTagChips"></div>
+        <span></span>
+        <div style="display: flex; flex-direction: row-reverse; justify-content: space-between;">
+          <button type="button" class="danger  small" onclick="resetFilters()" style="max-width: 50%;">清空</button>
+        </div>
+      </div>
+    </details>
+
+    <h2 class="section-title">
+      <span>需主动维系</span>
+      <span style="font-size:0.88rem; font-weight:600; color:var(--muted);" id="activeSummaryTip"></span>
+    </h2>
     <div id="activeArea"></div>
 
     <details class="fold-box" id="frequentFold">
       <summary>
         <span>有共同事务频频往来</span>
-        <span id="frequentCount">折叠</span>
+        <span id="frequentCount">0 人</span>
       </summary>
       <div class="fold-body" id="frequentArea"></div>
     </details>
@@ -465,13 +792,13 @@
     <details class="fold-box" id="holidayFold">
       <summary>
         <span>节日问候</span>
-        <span id="holidayCount">折叠</span>
+        <span id="holidayCount">0 人</span>
       </summary>
       <div class="fold-body" id="holidayArea"></div>
     </details>
   </div>
 
-  <!-- 记一次 + 历史记录弹窗 -->
+  <!-- 记一次 + 预定 + 档案 + 历史记录弹窗 -->
   <div class="modal-bg" id="recordModal">
     <div class="modal-panel">
       <div class="modal-top">
@@ -479,33 +806,80 @@
         <button class="small" onclick="closeModal('recordModal')">关闭</button>
       </div>
 
+      <div id="currentPlanBanner" class="plan-banner" style="display:none;"></div>
+
       <form onsubmit="saveRecord(event)">
         <div class="two-col">
           <div class="field">
-            <label for="recDate">日期（可填过去日期）</label>
+            <label for="recDate">日期</label>
             <input type="date" id="recDate" required />
           </div>
           <div class="field">
             <label for="recMethod">方式</label>
             <select id="recMethod">
-              <option value="见面">见面</option>
-              <option value="聊天">聊天</option>
+              <option value="见面">🤝 见面</option>
+              <option value="聊天">💬 聊天</option>
             </select>
           </div>
         </div>
         <div class="field">
           <label for="recNote">简短备注（可不填）</label>
-          <input type="text" id="recNote" placeholder="例如：吃晚饭 / 聊近况" />
+          <input type="text" id="recNote" placeholder="例如：吃晚饭" />
         </div>
         <button type="submit" class="primary" style="width:100%;">保存记录</button>
       </form>
 
-      <details class="fold-box" style="margin-top:16px;">
+      <!-- 未来预定 -->
+      <details class="fold-box" id="planFold" style="margin-top:14px;">
         <summary>
-          <span>修改板块或间隔天数</span>
+          <span>📅 未来预定</span>
+          <span id="planFoldStatus">未预定</span>
+        </summary>
+        <div class="fold-body">
+          <div class="two-col">
+            <div class="field">
+              <label for="planDate">预定日期</label>
+              <input type="date" id="planDate" />
+            </div>
+            <div class="field">
+              <label for="planMethod">预定方式</label>
+              <select id="planMethod">
+                <option value="见面">🤝 见面</option>
+                <option value="聊天">💬 聊天</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="planNote">预定说明（可不填）</label>
+            <input type="text" id="planNote" placeholder="例如：一起吃晚饭" />
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="primary small" onclick="savePersonPlan()">保存预定</button>
+            <button type="button" class="plan-btn small" onclick="completePlanToLog()">转为已发生</button>
+            <button type="button" class="danger small" onclick="clearPersonPlan()">取消预定</button>
+          </div>
+        </div>
+      </details>
+
+      <!-- 个人档案（标签、备注、板块） -->
+      <details class="fold-box" id="infoFold" style="margin-top:12px;">
+        <summary>
+          <span>基本信息</span>
           <span>展开</span>
         </summary>
         <div class="fold-body">
+          <div class="field">
+            <label for="editName">姓名或称呼</label>
+            <input type="text" id="editName" required />
+          </div>
+          <div class="field">
+            <label for="editTags">#标签（逗号或空格分隔）</label>
+            <input type="text" id="editTags" placeholder="例如：上海, 同门, 师姐" />
+          </div>
+          <div class="field">
+            <label for="editProfileNote">个人备注（公司/关系/兴趣/可发内容）</label>
+            <textarea id="editProfileNote" placeholder="例如：xx的男朋友 / 喜欢咖啡 / 可发新书链接"></textarea>
+          </div>
           <div class="two-col">
             <div class="field">
               <label for="editGroup">所属板块</label>
@@ -521,14 +895,14 @@
             </div>
           </div>
           <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-            <button type="button" class="primary small" onclick="updatePersonGroup()">保存设置</button>
+            <button type="button" class="primary small" onclick="updatePersonProfile()">保存设置</button>
             <button type="button" class="danger small" onclick="removeCurrentPerson()">删除此人</button>
           </div>
         </div>
       </details>
 
       <div class="history-list">
-        <div style="font-weight:700; margin-bottom:6px;">历史记录（点某条可显示删除）</div>
+        <div style="font-weight:700; margin-bottom:6px;">历史记录（点某条可删除）</div>
         <div id="historyArea"></div>
       </div>
     </div>
@@ -545,6 +919,14 @@
         <div class="field">
           <label for="addName">姓名或称呼</label>
           <input type="text" id="addName" required placeholder="例如：张明 / 李老师" />
+        </div>
+        <div class="field">
+          <label for="addTags">#标签（逗号或空格分隔）</label>
+          <input type="text" id="addTags" placeholder="例如：上海, 师姐" />
+        </div>
+        <div class="field">
+          <label for="addProfileNote">个人备注（可不填）</label>
+          <textarea id="addProfileNote" placeholder="公司、关系、兴趣方向、可发内容"></textarea>
         </div>
         <div class="two-col">
           <div class="field">
@@ -568,13 +950,13 @@
           <div class="field">
             <label for="addMethod">上次方式</label>
             <select id="addMethod">
-              <option value="见面">见面</option>
-              <option value="聊天">聊天</option>
+              <option value="见面">🤝 见面</option>
+              <option value="聊天">💬 聊天</option>
             </select>
           </div>
         </div>
         <div class="field">
-          <label for="addNote">备注（可不填）</label>
+          <label for="addNote">本次记录备注（可不填）</label>
           <input type="text" id="addNote" placeholder="可留空" />
         </div>
         <button type="submit" class="primary" style="width:100%;">确认添加</button>
@@ -582,15 +964,71 @@
     </div>
   </div>
 
-  <!-- GitHub Gist 同步设置弹窗 -->
+  <!-- 批量添加记录弹窗 -->
+  <div class="modal-bg" id="batchModal">
+    <div class="modal-panel">
+      <div class="modal-top">
+        <h2>批量添加往来记录</h2>
+        <button class="small" onclick="closeModal('batchModal')">关闭</button>
+      </div>
+      <form onsubmit="saveBatchRecords(event)">
+        <div class="field">
+          <label for="batchFilterInput">过滤人员</label>
+          <input type="text" id="batchFilterInput" oninput="renderBatchCandidates()" placeholder="输入姓名或标签..." />
+        </div>
+        <div class="field">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="margin:0;">选择人员（已选 <span id="batchSelectedCount">0</span> 人）</label>
+            <button type="button" class="small" onclick="clearBatchSelection()">清空已选</button>
+          </div>
+          <div class="check-list" id="batchCandidatesArea"></div>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label for="batchDate">日期</label>
+            <input type="date" id="batchDate" required />
+          </div>
+          <div class="field">
+            <label for="batchMethod">方式</label>
+            <select id="batchMethod">
+              <option value="见面">🤝 见面</option>
+              <option value="聊天">💬 聊天</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="batchNote">统一备注</label>
+          <input type="text" id="batchNote" placeholder="例如：一起吃了晚饭" />
+        </div>
+        <button type="submit" class="primary" style="width:100%;">批量保存</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 备份导出/汇入 与 GitHub Gist 同步弹窗 -->
   <div class="modal-bg" id="syncModal">
     <div class="modal-panel">
       <div class="modal-top">
-        <h2>GitHub Gist 同步设置</h2>
+        <h2>档案备份与云端同步</h2>
         <button class="small" onclick="closeModal('syncModal')">关闭</button>
       </div>
-      <p style="font-size:0.92rem; color:var(--muted); margin-top:0;">
-        填入仅勾选 <code>gist</code> 权限的 GitHub Token 与私有 Gist ID。留空则仅保存在当前浏览器。
+
+      <!-- 本地 JSON 备份与汇入 -->
+      <div class="backup-box">
+        <div style="font-weight:700; margin-bottom:6px;">本地档案备份（推荐定期导出保存）</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <button type="button" class="primary small" onclick="exportBackupFile()">导出备份档案 (.json)</button>
+          <button type="button" class="small" onclick="triggerImportFile()">汇入备份档案 (.json)</button>
+          <input type="file" id="importFileInput" accept=".json,application/json" style="display:none;" onchange="handleImportFile(event)" />
+        </div>
+        <div style="font-size:0.82rem; color:var(--muted); margin-top:6px;">
+          汇入时可选择「覆盖当前数据」或「按姓名合并新增」。
+        </div>
+      </div>
+
+      <div style="font-weight:700; margin-bottom:6px;">GitHub Gist 云端同步（可选）</div>
+      <p style="font-size:0.88rem; color:var(--muted); margin-top:0;">
+        填入仅勾选 <code>gist</code> 权限的 GitHub Token 与私有 Gist ID。
       </p>
       <form onsubmit="saveGistConfig(event)">
         <div class="field">
@@ -622,6 +1060,7 @@
     let expandedLogIndex = null;
     let armedDeleteIndex = null;
     let currentView = localStorage.getItem(VIEW_KEY) || "card";
+    let batchSelectedIds = new Set();
 
     const FESTIVALS = [
       { name: "元旦", date: "2027-01-01" },
@@ -636,33 +1075,42 @@
       {
         id: "p-1",
         name: "高屿",
+        tags: ["上海", "同门"],
+        profileNote: "同门 · 可约晚饭",
         group: "active",
         days: 30,
         lastDate: "2026-10-12",
         logs: [
-          { date: "2026-10-12", method: "见面", note: "晚饭，聊了近况" },
-          { date: "2026-09-10", method: "聊天", note: "聊了看过的书" }
-        ]
+          { date: "2026-10-12", method: "见面", note: "晚饭" },
+          { date: "2026-09-10", method: "聊天", note: "聊书" }
+        ],
+        plan: null
       },
       {
         id: "p-2",
         name: "杨柳",
+        tags: ["北京", "合作项目"],
+        profileNote: "项目协作",
         group: "frequent",
         days: 30,
         lastDate: "2026-11-18",
         logs: [
-          { date: "2026-11-18", method: "见面", note: "一起推进项目" }
-        ]
+          { date: "2026-11-18", method: "见面", note: "推进项目" }
+        ],
+        plan: null
       },
       {
         id: "p-3",
         name: "李老师",
+        tags: ["师长"],
+        profileNote: "节日问候",
         group: "holiday",
         days: 30,
         lastDate: "2026-09-25",
         logs: [
           { date: "2026-09-25", method: "聊天", note: "中秋问候" }
-        ]
+        ],
+        plan: null
       }
     ];
 
@@ -688,6 +1136,21 @@
         .replaceAll('"', "&quot;");
     }
 
+    function parseTagsInput(raw) {
+      if (!raw) return [];
+      const parts = String(raw).split(/[,，、;；\s]+/).map(s => s.trim()).filter(Boolean);
+      return [...new Set(parts)];
+    }
+
+    function normalizePlan(plan) {
+      if (!plan || !plan.date) return null;
+      return {
+        date: plan.date,
+        method: plan.method === "聊天" ? "聊天" : "见面",
+        note: plan.note || ""
+      };
+    }
+
     function normalizePerson(p) {
       const logs = [...(p.logs || [])]
         .map(x => ({
@@ -700,8 +1163,23 @@
       const group = ["active", "frequent", "holiday"].includes(p.group) ? p.group : "active";
       const days = Number(p.days) > 0 ? Number(p.days) : 30;
       const lastDate = logs.length > 0 ? logs[0].date : (p.lastDate || todayStr());
+      const tags = Array.isArray(p.tags)
+        ? [...new Set(p.tags.map(t => String(t).trim()).filter(Boolean))]
+        : parseTagsInput(p.tags || "");
+      const profileNote = typeof p.profileNote === "string" ? p.profileNote : (p.bio || "");
+      const plan = normalizePlan(p.plan);
 
-      return { ...p, group, days, lastDate, logs };
+      return {
+        id: p.id || ("p-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6)),
+        name: String(p.name || "未命名").trim(),
+        tags,
+        profileNote,
+        group,
+        days,
+        lastDate,
+        logs,
+        plan
+      };
     }
 
     function loadPeople() {
@@ -740,6 +1218,91 @@
       }
     }
 
+    /* 导出与汇入备份档案 */
+    function exportBackupFile() {
+      const list = loadPeople();
+      const payload = {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        people: list
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `contacts-backup-${todayStr()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setStatus(`已导出备份（${list.length} 人）`);
+    }
+
+    function triggerImportFile() {
+      const input = document.getElementById("importFileInput");
+      input.value = "";
+      input.click();
+    }
+
+    async function handleImportFile(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        const rawList = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.people) ? parsed.people : null);
+        if (!rawList) {
+          alert("文件格式不正确：未找到人员数据列表。");
+          return;
+        }
+        const imported = rawList.map(normalizePerson);
+        const overwrite = confirm(
+          `读取到 ${imported.length} 条人员档案。\n\n点击「确定」：完全覆盖当前所有记录\n点击「取消」：保留现有记录并按姓名合并新增`
+        );
+
+        let finalList;
+        if (overwrite) {
+          finalList = imported;
+        } else {
+          const existing = loadPeople();
+          const mapByName = new Map(existing.map(p => [p.name, p]));
+          for (const item of imported) {
+            if (mapByName.has(item.name)) {
+              const old = mapByName.get(item.name);
+              const mergedTags = [...new Set([...old.tags, ...item.tags])];
+              const mergedMemo = old.profileNote || item.profileNote;
+              const logKeys = new Set(old.logs.map(l => `${l.date}|${l.method}|${l.note}`));
+              const mergedLogs = [...old.logs];
+              for (const l of item.logs) {
+                const k = `${l.date}|${l.method}|${l.note}`;
+                if (!logKeys.has(k)) {
+                  mergedLogs.push(l);
+                  logKeys.add(k);
+                }
+              }
+              mapByName.set(item.name, normalizePerson({
+                ...old,
+                tags: mergedTags,
+                profileNote: mergedMemo,
+                plan: old.plan || item.plan,
+                logs: mergedLogs
+              }));
+            } else {
+              mapByName.set(item.name, item);
+            }
+          }
+          finalList = [...mapByName.values()];
+        }
+
+        await savePeople(finalList);
+        renderAll();
+        closeModal("syncModal");
+        alert(`汇入成功，当前共 ${finalList.length} 位人员。`);
+      } catch {
+        alert("解析备份文件失败，请确认选择了正确的 .json 文件。");
+      }
+    }
+
     function gistHeaders(token) {
       const h = { Accept: "application/vnd.github+json" };
       if (token) {
@@ -751,7 +1314,7 @@
     async function pullGist(showTip = false) {
       const cfg = getGistConfig();
       if (!cfg.token || !cfg.gistId) {
-        setStatus("未配置 Gist，仅保存在本机");
+        setStatus("仅保存在本机");
         return;
       }
       setStatus("正在读取 Gist...");
@@ -767,15 +1330,16 @@
           throw new Error("未找到对应文件");
         }
         const parsed = JSON.parse(fileObj.content);
-        if (Array.isArray(parsed)) {
-          await savePeople(parsed, true);
+        const rawList = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.people) ? parsed.people : null);
+        if (rawList) {
+          await savePeople(rawList, true);
           renderAll();
         }
-        setStatus(`已同步 Gist（${new Date().toTimeString().slice(0, 5)}）`);
+        setStatus(`已同步（${new Date().toTimeString().slice(0, 5)}）`);
         if (showTip) alert("同步成功");
       } catch {
         setStatus("Gist 读取失败，使用本机数据");
-        if (showTip) alert("读取失败，请检查 Token、Gist ID 与文件名是否正确");
+        if (showTip) alert("读取失败，请检查 Token、Gist ID 与文件名");
       }
     }
 
@@ -799,7 +1363,7 @@
           })
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        setStatus(`已保存至 Gist（${new Date().toTimeString().slice(0, 5)}）`);
+        setStatus(`已同步（${new Date().toTimeString().slice(0, 5)}）`);
       } catch {
         setStatus("Gist 写入失败，已保留在本机");
       }
@@ -812,7 +1376,7 @@
         .sort((a, b) => a.left - b.left)[0];
 
       if (!next) {
-        return { due: false, percent: 0, badge: "无近期节日", sub: "等待节日" };
+        return { due: false, badge: "无近期节日", percent: 0, leftLabel: "—", rightLabel: "" };
       }
 
       const d = toLocalDate(next.date);
@@ -821,48 +1385,204 @@
       const greeted = person.lastDate >= winStart;
 
       if (next.left <= 7 && !greeted) {
-        return { due: true, percent: 100, badge: `距${next.name} ${next.left}天`, sub: "建议发问候" };
+        return { due: true, badge: `${next.name} ${next.left}天`, percent: 100, leftLabel: "待问候", rightLabel: next.date.slice(5) };
       }
       return {
         due: false,
-        percent: 0,
-        badge: `${next.name}还有 ${next.left}天`,
-        sub: greeted ? "本次已问候" : "未到提醒期"
+        badge: `${next.name} ${next.left}天`,
+        percent: greeted ? 100 : Math.max(0, Math.min(100, Math.round(((30 - Math.min(30, next.left)) / 30) * 100))),
+        leftLabel: greeted ? "✓ 已问候" : `距${next.name}`,
+        rightLabel: `${next.left}天`
       };
     }
 
     function switchView(v) {
       currentView = v;
       localStorage.setItem(VIEW_KEY, v);
-      document.getElementById("viewCardBtn").classList.toggle("active", v === "card");
-      document.getElementById("viewListBtn").classList.toggle("active", v === "list");
+      syncViewButtons();
       renderAll();
     }
 
+    function syncViewButtons() {
+      document.getElementById("viewCardBtn").classList.toggle("active", currentView === "card");
+      document.getElementById("viewListBtn").classList.toggle("active", currentView === "list");
+      document.getElementById("viewCompactBtn").classList.toggle("active", currentView === "compact");
+    }
+
+    function selectQuickTag(tag) {
+      const sel = document.getElementById("tagFilter");
+      sel.value = sel.value === tag ? "" : tag;
+      renderAll();
+    }
+
+    function resetFilters() {
+      document.getElementById("searchInput").value = "";
+      document.getElementById("tagFilter").value = "";
+      renderAll();
+    }
+
+    function matchesFilter(person, query, selectedTag) {
+      if (selectedTag && !person.tags.includes(selectedTag)) {
+        return false;
+      }
+      if (!query) return true;
+      const q = query.toLowerCase();
+      const hay = [
+        person.name,
+        ...(person.tags || []),
+        person.profileNote || "",
+        person.plan ? `${person.plan.date} ${person.plan.method} ${person.plan.note}` : "",
+        ...(person.logs || []).map(l => `${l.date} ${l.method} ${l.note}`)
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    }
+
+    function renderFilterControls(people, query, selectedTag) {
+      const badge = document.getElementById("filterSummaryBadge");
+      const activeParts = [];
+      if (selectedTag) activeParts.push(`# ${selectedTag}`);
+      if (query) activeParts.push(`🔍 ${query}`);
+      badge.textContent = activeParts.length ? activeParts.join(" · ") : "全部";
+
+      const tagCounts = new Map();
+      for (const p of people) {
+        for (const t of p.tags) {
+          tagCounts.set(t, (tagCounts.get(t) || 0) + 1);
+        }
+      }
+      const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+      const selectEl = document.getElementById("tagFilter");
+      const currentVal = selectEl.value;
+
+      selectEl.innerHTML = `<option value="">全部地点 / 标签</option>` +
+        sortedTags.map(([t, cnt]) => `<option value="${escapeText(t)}">${escapeText(t)}（${cnt}）</option>`).join("");
+      selectEl.value = sortedTags.some(([t]) => t === currentVal) ? currentVal : "";
+
+      const chipsEl = document.getElementById("quickTagChips");
+      if (sortedTags.length === 0) {
+        chipsEl.innerHTML = `<span style="font-size:0.82rem; color:var(--muted);">暂无标签</span>`;
+        return;
+      }
+
+      chipsEl.innerHTML = sortedTags.map(([t, cnt]) => {
+        const active = selectEl.value === t ? "active" : "";
+        return `<button type="button" class="chip-btn ${active}" onclick="selectQuickTag('${escapeText(t)}')"># ${escapeText(t)} (${cnt})</button>`;
+      }).join("");
+    }
+
+    function renderOverduePlans(people, now) {
+      const box = document.getElementById("overduePlansBox");
+      const listEl = document.getElementById("overduePlansList");
+      const overdue = people.filter(p => p.plan && p.plan.date < now).sort((a, b) => a.plan.date.localeCompare(b.plan.date));
+
+      if (overdue.length === 0) {
+        box.style.display = "none";
+        listEl.innerHTML = "";
+        return;
+      }
+
+      box.style.display = "block";
+      listEl.innerHTML = overdue.map(p => {
+        const icon = p.plan.method === "见面" ? "🤝" : "💬";
+        const notePart = p.plan.note ? ` · ${escapeText(p.plan.note)}` : "";
+        return `
+          <div class="pending-item">
+            <div>
+              <strong>${escapeText(p.name)}</strong>（${escapeText(p.plan.date)} ${icon}${notePart}）
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="primary small" onclick="resolvePlan('${p.id}', true)">✓ 已赴约</button>
+              <button type="button" class="small" onclick="resolvePlan('${p.id}', false)">✕ 取消预定</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function resolvePlan(personId, completed) {
+      const list = loadPeople();
+      const idx = list.findIndex(x => x.id === personId);
+      if (idx === -1) return;
+      const plan = list[idx].plan;
+      if (completed && plan) {
+        list[idx].logs.push({
+          date: plan.date,
+          method: plan.method,
+          note: plan.note ? `（预定完成）${plan.note}` : "（预定完成）"
+        });
+      }
+      list[idx].plan = null;
+      await savePeople(list);
+      if (currentPersonId === personId) {
+        openRecordModal(personId);
+      }
+      renderAll();
+    }
+
+    /* 精简视图：绝对不显示标签和备注 */
+    function renderCompactItem(item) {
+      const { person, due, planned, tagClass, tagText } = item;
+      return `
+        <div class="compact-item ${due ? "due" : ""} ${planned ? "planned" : ""}">
+          <div class="compact-top">
+            <span class="compact-name">${escapeText(person.name)}</span>
+            <span class="status-badge ${tagClass}">${escapeText(tagText)}</span>
+          </div>
+          <div class="compact-actions">
+            <button type="button" class="primary" onclick="openRecordModal('${person.id}')">记一次</button>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 卡片与列表视图：档案区与动态区完全分离，图形进度条直观呈现 */
     function renderPersonItem(item) {
-      const { person, due, percent, color, tagClass, tagText, leftText, rightText, extraBtn } = item;
-      const latest = person.logs[0];
-      const latestStr = latest
-        ? `${latest.date} · ${latest.method}${latest.note ? `：${latest.note}` : ""}`
-        : `上次：${person.lastDate}`;
+      const { person, due, planned, tagClass, tagText, percent, barColor, barLeft, barRight, latestBrief, extraBtn } = item;
+
+      const tagsHtml = person.tags.length
+        ? `<div class="tag-row">${person.tags.map(t => `<span class="person-tag"># ${escapeText(t)}</span>`).join("")}</div>`
+        : "";
+
+      const memoHtml = person.profileNote
+        ? `<div class="person-memo" title="${escapeText(person.profileNote)}">${escapeText(person.profileNote)}</div>`
+        : "";
+
+      const progressHtml = `
+        <div class="progress-wrap">
+          <div class="progress-labels">
+            <span>${escapeText(barLeft)}</span>
+            <span>${escapeText(barRight)}</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-fill" style="width:${percent}%; background:${barColor};"></div>
+          </div>
+        </div>
+      `;
+
+      const planHtml = planned
+        ? `<div class="activity-box plan-box">📅 ${escapeText(person.plan.date.slice(5))} ${person.plan.method === "见面" ? "🤝" : "💬"}${person.plan.note ? ` ${escapeText(person.plan.note)}` : ""}</div>`
+        : "";
+
+      const lastHtml = `<div class="activity-box">${escapeText(latestBrief)}</div>`;
 
       if (currentView === "list") {
         return `
-          <div class="row-item ${due ? "due" : ""}">
-            <div>
-              <div class="row-name">${escapeText(person.name)}</div>
-              <span class="tag ${tagClass}">${escapeText(tagText)}</span>
-            </div>
-            <div>
-              <div class="bar-text">
-                <span>${escapeText(leftText)}</span>
-                <span>${escapeText(rightText)}</span>
+          <div class="row-item ${due ? "due" : ""} ${planned ? "planned" : ""}">
+            <div class="row-profile">
+              <div class="row-name-line">
+                <span class="row-name">${escapeText(person.name)}</span>
+                <span class="status-badge ${tagClass}">${escapeText(tagText)}</span>
               </div>
-              <div class="bar-bg"><div class="bar-fill" style="width:${percent}%; background:${color};"></div></div>
-              <div class="last-info" style="margin-top:6px;">${escapeText(latestStr)}</div>
+              ${tagsHtml}
+              ${memoHtml}
+            </div>
+            <div class="row-activity">
+              ${progressHtml}
+              ${planHtml}
+              ${lastHtml}
             </div>
             <div class="row-actions">
-              <button class="primary small" onclick="openRecordModal('${person.id}')">记一次（${person.logs.length}）</button>
+              <button class="primary small" onclick="openRecordModal('${person.id}')">记一次</button>
               ${extraBtn || ""}
             </div>
           </div>
@@ -870,22 +1590,24 @@
       }
 
       return `
-        <div class="card ${due ? "due" : ""}">
-          <div class="card-head">
-            <h3 class="person-name">${escapeText(person.name)}</h3>
-            <span class="tag ${tagClass}">${escapeText(tagText)}</span>
-          </div>
-          <div>
-            <div class="bar-text">
-              <span>${escapeText(leftText)}</span>
-              <span>${escapeText(rightText)}</span>
+        <div class="card ${due ? "due" : ""} ${planned ? "planned" : ""}">
+          <div class="card-profile-zone">
+            <div class="card-head">
+              <h3 class="person-name">${escapeText(person.name)}</h3>
+              <span class="status-badge ${tagClass}">${escapeText(tagText)}</span>
             </div>
-            <div class="bar-bg"><div class="bar-fill" style="width:${percent}%; background:${color};"></div></div>
+            ${tagsHtml}
+            ${memoHtml}
           </div>
-          <div class="last-info">${escapeText(latestStr)}</div>
-          <div class="card-btns">
-            <button class="primary small" onclick="openRecordModal('${person.id}')">记一次（${person.logs.length}）</button>
-            ${extraBtn || ""}
+
+          <div class="card-activity-zone">
+            ${progressHtml}
+            ${planHtml}
+            ${lastHtml}
+            <div class="card-btns">
+              <button class="primary small" onclick="openRecordModal('${person.id}')">记一次</button>
+              ${extraBtn || ""}
+            </div>
           </div>
         </div>
       `;
@@ -894,6 +1616,10 @@
     function renderSection(el, items, emptyText) {
       if (items.length === 0) {
         el.innerHTML = `<p class="empty-msg">${escapeText(emptyText)}</p>`;
+        return;
+      }
+      if (currentView === "compact") {
+        el.innerHTML = `<div class="compact-grid">${items.map(renderCompactItem).join("")}</div>`;
         return;
       }
       const cls = currentView === "list" ? "list-wrap" : "cards-grid";
@@ -910,17 +1636,34 @@
     }
 
     function renderAll() {
+      syncViewButtons();
       const now = todayStr();
-      const people = loadPeople();
+      const allPeople = loadPeople();
+      const query = document.getElementById("searchInput").value.trim();
+      const selectedTag = document.getElementById("tagFilter").value;
+
+      renderFilterControls(allPeople, query, selectedTag);
+      renderOverduePlans(allPeople, now);
+
+      const filteredPeople = allPeople.filter(p => matchesFilter(p, query, selectedTag));
 
       const activeItems = [];
       const frequentItems = [];
       const holidayItems = [];
       let dueTotal = 0;
+      let plannedTotal = 0;
       let holidayDueTotal = 0;
 
-      for (const p of people) {
+      for (const p of filteredPeople) {
         const elapsed = Math.max(0, daysBetween(p.lastDate, now));
+        const hasFuturePlan = Boolean(p.plan && p.plan.date >= now);
+        if (hasFuturePlan) plannedTotal++;
+
+        const latest = p.logs[0];
+        const methodIcon = latest ? (latest.method === "见面" ? "🤝" : "💬") : "🕒";
+        const latestBrief = latest
+          ? `${methodIcon} ${latest.date.slice(5)}${latest.note ? ` · ${latest.note}` : ""}`
+          : `🕒 ${p.lastDate.slice(5)}`;
 
         if (p.group === "holiday") {
           const info = getFestivalInfo(p, now);
@@ -928,25 +1671,30 @@
           holidayItems.push({
             person: p,
             due: info.due,
+            planned: hasFuturePlan,
             sortKey: info.due ? 1 : 0,
-            percent: info.percent,
-            color: info.due ? "var(--danger)" : "var(--accent)",
-            tagClass: info.due ? "due" : "",
-            tagText: info.badge,
-            leftText: `上次 ${elapsed} 天前`,
-            rightText: info.sub
+            tagClass: hasFuturePlan ? "plan" : (info.due ? "due" : "ok"),
+            tagText: hasFuturePlan ? `📅 ${p.plan.date.slice(5)}` : info.badge,
+            percent: hasFuturePlan ? 100 : info.percent,
+            barColor: hasFuturePlan ? "var(--plan)" : (info.due ? "var(--danger)" : "var(--ok)"),
+            barLeft: info.leftLabel,
+            barRight: info.rightLabel,
+            latestBrief
           });
         } else if (p.group === "frequent") {
+          const freqPercent = Math.min(100, Math.round((elapsed / 30) * 100));
           frequentItems.push({
             person: p,
             due: false,
+            planned: hasFuturePlan,
             sortKey: -elapsed,
-            percent: 100,
-            color: "#374151",
-            tagClass: "",
-            tagText: "频频往来",
-            leftText: `上次 ${elapsed} 天前`,
-            rightText: "暂不提醒",
+            tagClass: hasFuturePlan ? "plan" : "",
+            tagText: hasFuturePlan ? `📅 ${p.plan.date.slice(5)}` : `${elapsed}天前`,
+            percent: freqPercent,
+            barColor: hasFuturePlan ? "var(--plan)" : "#4b5563",
+            barLeft: `${elapsed}天前`,
+            barRight: "常联系",
+            latestBrief,
             extraBtn: `<button class="small" onclick="moveToActive('${p.id}')">转入需维系</button>`
           });
         } else {
@@ -954,30 +1702,36 @@
           const percent = Math.min(100, Math.round(ratio * 100));
           let due = false;
           let tagClass = "ok";
-          let tagText = `还剩 ${Math.max(0, p.days - elapsed)} 天`;
-          let color = "var(--ok)";
+          let tagText = `剩 ${Math.max(0, p.days - elapsed)}天`;
+          let barColor = "var(--ok)";
 
-          if (elapsed > p.days) {
+          if (hasFuturePlan) {
+            tagClass = "plan";
+            tagText = `📅 ${p.plan.date.slice(5)}`;
+            barColor = "var(--plan)";
+          } else if (elapsed > p.days) {
             due = true;
             dueTotal++;
             tagClass = "due";
-            tagText = `已超 ${elapsed - p.days} 天`;
-            color = "var(--danger)";
+            tagText = `超 ${elapsed - p.days}天`;
+            barColor = "var(--danger)";
           } else if (ratio >= 0.7) {
             tagClass = "warn";
-            color = "var(--warn)";
+            barColor = "var(--warn)";
           }
 
           activeItems.push({
             person: p,
             due,
-            sortKey: ratio,
-            percent,
-            color,
+            planned: hasFuturePlan,
+            sortKey: hasFuturePlan ? -0.5 : ratio,
             tagClass,
             tagText,
-            leftText: `已过 ${elapsed} 天 / 间隔 ${p.days} 天`,
-            rightText: `${percent}%`
+            percent,
+            barColor,
+            barLeft: `${elapsed} / ${p.days}天`,
+            barRight: `${percent}%`,
+            latestBrief
           });
         }
       }
@@ -986,14 +1740,19 @@
       frequentItems.sort((a, b) => b.sortKey - a.sortKey);
       holidayItems.sort((a, b) => b.sortKey - a.sortKey);
 
-      document.getElementById("topNotice").textContent = dueTotal > 0
-        ? `今天是 ${now}。有 ${dueTotal} 位「需主动维系」的朋友超过建议间隔，可以约见或聊天。`
-        : `今天是 ${now}。当前没有超期的朋友。`;
+      const parts = [`今天 ${now}`];
+      if (dueTotal > 0) parts.push(`${dueTotal} 人超期`);
+      else parts.push("无超期");
+      if (plannedTotal > 0) parts.push(`📅 ${plannedTotal} 项预定`);
+      document.getElementById("topNotice").textContent = parts.join(" · ");
+
+      const viewLabel = currentView === "compact" ? "精简" : (currentView === "list" ? "列表" : "卡片");
+      document.getElementById("activeSummaryTip").textContent = `${activeItems.length} 人 · ${viewLabel}`;
 
       renderSection(
         document.getElementById("activeArea"),
         activeItems,
-        "还没有「需主动维系」的人员，点击右上角「添加人员」。"
+        "没有匹配的「需主动维系」人员。"
       );
 
       document.getElementById("frequentCount").textContent = `${frequentItems.length} 人`;
@@ -1024,17 +1783,122 @@
       const person = loadPeople().find(x => x.id === personId);
       if (!person) return;
 
-      document.getElementById("recordModalTitle").textContent = `${person.name} · 记录与往来`;
+      document.getElementById("recordModalTitle").textContent = person.name;
       document.getElementById("recDate").value = todayStr();
       document.getElementById("recMethod").value = "见面";
       document.getElementById("recNote").value = "";
 
+      const banner = document.getElementById("currentPlanBanner");
+      const planStatus = document.getElementById("planFoldStatus");
+      if (person.plan) {
+        banner.style.display = "block";
+        banner.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <div>
+              <strong>📅 已预定：</strong>${escapeText(person.plan.date)} · ${escapeText(person.plan.method)}
+              ${person.plan.note ? `（${escapeText(person.plan.note)}）` : ""}
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="plan-btn small" onclick="completePlanToLog()">✓ 转为已发生</button>
+              <button type="button" class="danger small" onclick="clearPersonPlan()">✕ 取消预定</button>
+            </div>
+          </div>
+        `;
+        planStatus.textContent = `已预定 ${person.plan.date}`;
+        document.getElementById("planDate").value = person.plan.date;
+        document.getElementById("planMethod").value = person.plan.method;
+        document.getElementById("planNote").value = person.plan.note;
+      } else {
+        banner.style.display = "none";
+        planStatus.textContent = "未预定";
+        document.getElementById("planDate").value = todayStr();
+        document.getElementById("planMethod").value = "见面";
+        document.getElementById("planNote").value = "";
+      }
+
+      document.getElementById("editName").value = person.name;
+      document.getElementById("editTags").value = person.tags.join(", ");
+      document.getElementById("editProfileNote").value = person.profileNote;
       document.getElementById("editGroup").value = person.group;
       document.getElementById("editDays").value = person.days;
       toggleDaysField("editGroup", "editDaysField");
 
       renderHistory(person);
       document.getElementById("recordModal").classList.add("open");
+    }
+
+    async function savePersonPlan() {
+      if (!currentPersonId) return;
+      const date = document.getElementById("planDate").value;
+      const method = document.getElementById("planMethod").value;
+      const note = document.getElementById("planNote").value.trim();
+      if (!date) {
+        alert("请选择预定日期");
+        return;
+      }
+      const list = loadPeople();
+      const idx = list.findIndex(x => x.id === currentPersonId);
+      if (idx === -1) return;
+      list[idx].plan = { date, method, note };
+      await savePeople(list);
+      openRecordModal(currentPersonId);
+      renderAll();
+    }
+
+    async function completePlanToLog() {
+      if (!currentPersonId) return;
+      const list = loadPeople();
+      const idx = list.findIndex(x => x.id === currentPersonId);
+      if (idx === -1 || !list[idx].plan) return;
+      const p = list[idx].plan;
+      list[idx].logs.push({
+        date: p.date,
+        method: p.method,
+        note: p.note ? `（预定完成）${p.note}` : "（预定完成）"
+      });
+      list[idx].plan = null;
+      await savePeople(list);
+      openRecordModal(currentPersonId);
+      renderAll();
+    }
+
+    async function clearPersonPlan() {
+      if (!currentPersonId) return;
+      const list = loadPeople();
+      const idx = list.findIndex(x => x.id === currentPersonId);
+      if (idx === -1) return;
+      list[idx].plan = null;
+      await savePeople(list);
+      openRecordModal(currentPersonId);
+      renderAll();
+    }
+
+    async function updatePersonProfile() {
+      if (!currentPersonId) return;
+      const name = document.getElementById("editName").value.trim();
+      if (!name) {
+        alert("姓名不能为空");
+        return;
+      }
+      const tags = parseTagsInput(document.getElementById("editTags").value);
+      const profileNote = document.getElementById("editProfileNote").value.trim();
+      const group = document.getElementById("editGroup").value;
+      const days = Number(document.getElementById("editDays").value) || 30;
+
+      const list = loadPeople();
+      const pIdx = list.findIndex(x => x.id === currentPersonId);
+      if (pIdx === -1) return;
+
+      list[pIdx].name = name;
+      list[pIdx].tags = tags;
+      list[pIdx].profileNote = profileNote;
+      list[pIdx].group = group;
+      list[pIdx].days = days;
+      await savePeople(list);
+
+      document.getElementById("recordModalTitle").textContent = name;
+      renderAll();
+      alert("已保存");
     }
 
     function renderHistory(person) {
@@ -1047,11 +1911,12 @@
       area.innerHTML = person.logs.map((log, idx) => {
         const isExpanded = expandedLogIndex === idx;
         const isArmed = armedDeleteIndex === idx;
+        const icon = log.method === "见面" ? "🤝" : "💬";
         return `
           <div class="history-entry ${isExpanded ? "expanded" : ""}" onclick="toggleEntry(${idx})">
             <div class="entry-head">
-              <span>${escapeText(log.date)} · ${escapeText(log.method)}</span>
-              <span style="font-size:0.82rem; color:var(--muted);">${isExpanded ? "收起" : "点击可删"}</span>
+              <span>${escapeText(log.date)} · ${icon} ${escapeText(log.method)}</span>
+              <span style="font-size:0.82rem; color:var(--muted);">${isExpanded ? "收起" : "展开"}</span>
             </div>
             <div class="entry-note">${log.note ? escapeText(log.note) : "无备注"}</div>
             ${isExpanded ? `
@@ -1127,22 +1992,6 @@
       document.getElementById(fieldId).style.display = val === "active" ? "block" : "none";
     }
 
-    async function updatePersonGroup() {
-      if (!currentPersonId) return;
-      const group = document.getElementById("editGroup").value;
-      const days = Number(document.getElementById("editDays").value) || 30;
-
-      const list = loadPeople();
-      const pIdx = list.findIndex(x => x.id === currentPersonId);
-      if (pIdx === -1) return;
-
-      list[pIdx].group = group;
-      list[pIdx].days = days;
-      await savePeople(list);
-      renderAll();
-      alert("已更新");
-    }
-
     async function removeCurrentPerson() {
       if (!currentPersonId) return;
       const list = loadPeople();
@@ -1159,6 +2008,8 @@
 
     function openAddModal() {
       document.getElementById("addName").value = "";
+      document.getElementById("addTags").value = "";
+      document.getElementById("addProfileNote").value = "";
       document.getElementById("addGroup").value = "active";
       document.getElementById("addDays").value = "30";
       document.getElementById("addDate").value = todayStr();
@@ -1171,6 +2022,8 @@
     async function createPerson(e) {
       e.preventDefault();
       const name = document.getElementById("addName").value.trim();
+      const tags = parseTagsInput(document.getElementById("addTags").value);
+      const profileNote = document.getElementById("addProfileNote").value.trim();
       const group = document.getElementById("addGroup").value;
       const days = Number(document.getElementById("addDays").value) || 30;
       const date = document.getElementById("addDate").value || todayStr();
@@ -1182,6 +2035,8 @@
       list.push(normalizePerson({
         id: "p-" + Date.now(),
         name,
+        tags,
+        profileNote,
         group,
         days,
         lastDate: date,
@@ -1191,6 +2046,79 @@
       await savePeople(list);
       closeModal("addModal");
       renderAll();
+    }
+
+    function openBatchModal() {
+      batchSelectedIds = new Set();
+      document.getElementById("batchFilterInput").value = "";
+      document.getElementById("batchDate").value = todayStr();
+      document.getElementById("batchMethod").value = "见面";
+      document.getElementById("batchNote").value = "";
+      renderBatchCandidates();
+      document.getElementById("batchModal").classList.add("open");
+    }
+
+    function renderBatchCandidates() {
+      const filter = document.getElementById("batchFilterInput").value.trim().toLowerCase();
+      const people = loadPeople();
+      const matched = people.filter(p => {
+        if (!filter) return true;
+        return [p.name, ...p.tags, p.profileNote].join(" ").toLowerCase().includes(filter);
+      });
+
+      document.getElementById("batchSelectedCount").textContent = String(batchSelectedIds.size);
+      const area = document.getElementById("batchCandidatesArea");
+      if (matched.length === 0) {
+        area.innerHTML = `<span class="empty-msg">无匹配人员</span>`;
+        return;
+      }
+
+      area.innerHTML = matched.map(p => {
+        const checked = batchSelectedIds.has(p.id) ? "checked" : "";
+        return `
+          <label class="check-item">
+            <input type="checkbox" ${checked} onchange="toggleBatchPerson('${p.id}', this.checked)" />
+            <span>${escapeText(p.name)}</span>
+          </label>
+        `;
+      }).join("");
+    }
+
+    function toggleBatchPerson(id, checked) {
+      if (checked) batchSelectedIds.add(id);
+      else batchSelectedIds.delete(id);
+      document.getElementById("batchSelectedCount").textContent = String(batchSelectedIds.size);
+    }
+
+    function clearBatchSelection() {
+      batchSelectedIds.clear();
+      renderBatchCandidates();
+    }
+
+    async function saveBatchRecords(e) {
+      e.preventDefault();
+      if (batchSelectedIds.size === 0) {
+        alert("请至少勾选一位人员");
+        return;
+      }
+      const date = document.getElementById("batchDate").value;
+      const method = document.getElementById("batchMethod").value;
+      const note = document.getElementById("batchNote").value.trim();
+      if (!date) return;
+
+      const list = loadPeople();
+      let updatedCount = 0;
+      for (const person of list) {
+        if (batchSelectedIds.has(person.id)) {
+          person.logs.push({ date, method, note });
+          updatedCount++;
+        }
+      }
+
+      await savePeople(list);
+      closeModal("batchModal");
+      renderAll();
+      alert(`已为 ${updatedCount} 位人员添加记录`);
     }
 
     function openSyncModal() {
