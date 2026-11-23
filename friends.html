@@ -9,6 +9,7 @@
       --bg: #f4f5f7;
       --surface: #ffffff;
       --input-bg: #f1f3f5;
+      --fold-bg: #f8fdff;
       --text: #111111;
       --muted: #4b5563;
       --line: #222222;
@@ -28,7 +29,6 @@
 
     * {
       box-sizing: border-box;
-      border-radius: 0 !important;
       box-shadow: none !important;
     }
 
@@ -84,6 +84,7 @@
       font-weight: 600;
       padding: 8px 13px;
       border: 1.5px solid var(--line);
+      border-radius: 5px;
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
@@ -130,6 +131,7 @@
     .view-group button {
       border: none;
       border-right: 1px solid var(--soft-line);
+      border-radius: 0;
       padding: 7px 11px;
       font-weight: 500;
     }
@@ -155,6 +157,7 @@
       font-size: 0.88rem;
       font-weight: 600;
       border: 1.5px solid var(--soft-line);
+      border-radius: 0;
       background: var(--input-bg);
       color: var(--text);
       text-align: center;
@@ -319,6 +322,9 @@
       border: 1px solid var(--soft-line);
       margin-top: 14px;
     }
+    details.fold-box[open] {
+      border: 2px solid var(--line);
+    }
 
     details.fold-box > summary {
       padding: 10px 14px;
@@ -340,11 +346,17 @@
     .fold-body {
       padding: 14px 15px;
       border-top: 1px solid var(--soft-line);
-      background: var(--surface);
+      background: var(--fold-bg);
     }
 
+    details.fold-box#planFold[open] {
+      border: 2px solid var(--plan);
+    }
     details.fold-box#planFold > summary {
       color: var(--plan);
+      background: var(--plan-bg);
+    }
+    details.fold-box#planFold > .fold-body {
       background: var(--plan-bg);
     }
 
