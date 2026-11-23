@@ -14,7 +14,7 @@
       --line: #222222;
       --soft-line: #b8bec6;
       --accent: #1e40af;
-      /* --accent: #1d4ed8; */
+      --accent-hover: #173189;
       --accent-text: #ffffff;
       --ok: #047857;
       --ok-bg: #ecfdf5;
@@ -44,7 +44,7 @@
     .container {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 20px 16px 80px;
+      padding: 20px 16px 88px;
     }
 
     header {
@@ -55,7 +55,7 @@
       gap: 12px;
       padding-bottom: 14px;
       border-bottom: 2px solid var(--line);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     h1 {
@@ -83,7 +83,7 @@
       font-size: 0.92rem;
       font-weight: 600;
       padding: 8px 13px;
-      border: 2px solid var(--line);
+      border: 1.5px solid var(--line);
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
@@ -100,10 +100,8 @@
     }
 
     button.primary:hover {
-      /* background: #1e40af;
-      border-color: #1e40af; */
-      background: #173189;
-      border-color: #173189;
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
     }
 
     button.danger {
@@ -115,23 +113,25 @@
     button.plan-btn {
       color: var(--plan);
       border-color: var(--plan);
-      background: var(--plan-bg);
+      background: var(--surface);
     }
 
     button.small {
-      padding: 5px 9px;
+      padding: 6px 10px;
       font-size: 0.85rem;
     }
 
     .view-group {
       display: inline-flex;
-      border: 2px solid var(--line);
+      border: 1.5px solid var(--line);
+      background: var(--surface);
     }
 
     .view-group button {
       border: none;
-      border-right: 1px solid var(--line);
+      border-right: 1px solid var(--soft-line);
       padding: 7px 11px;
+      font-weight: 500;
     }
 
     .view-group button:last-child {
@@ -141,17 +141,79 @@
     .view-group button.active {
       background: var(--line);
       color: #ffffff;
+      font-weight: 700;
     }
 
-    .notice-box {
-      padding: 10px 0px;
+    /* 平铺方式选择按钮组：[见面] [聊天] */
+    .method-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .method-pill {
+      padding: 10px 5px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: 1.5px solid var(--soft-line);
+      background: var(--input-bg);
+      color: var(--text);
+      text-align: center;
+    }
+
+    .method-pill.active {
+      background: var(--line);
+      border-color: var(--line);
+      color: #ffffff;
+    }
+
+    /* 顶部状态栏：静态日期与可点击快捷筛选明确区分 */
+    .notice-bar {
+      padding: 8px 0 12px;
       margin-bottom: 12px;
-      font-size: 0.96rem;
+      font-size: 0.94rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notice-static {
+      color: var(--muted);
+      cursor: default;
+    }
+
+    .quick-filter-btn {
+      padding: 6px 10px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      border-width: 1.5px;
+    }
+
+    .quick-filter-btn.due-filter {
+      color: var(--danger);
+      border-color: var(--danger);
+      background: var(--surface);
+    }
+
+    .quick-filter-btn.due-filter.active {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    .quick-filter-btn.plan-filter {
+      color: var(--plan);
+      border-color: var(--plan);
+      background: var(--surface);
+    }
+
+    .quick-filter-btn.plan-filter.active {
+      background: var(--plan);
+      color: #ffffff;
     }
 
     .pending-box {
       background: var(--warn-bg);
-      border: 2px solid var(--warn);
+      border: 1.5px solid var(--warn);
       padding: 12px 15px;
       margin-bottom: 14px;
     }
@@ -171,23 +233,24 @@
       padding-top: 4px;
     }
 
-    /* 折叠筛选区 */
+    /* 仅做“展开/收起”的折叠面板：中性浅底+细线，不与按钮混淆 */
     details.filter-fold {
       background: var(--surface);
-      border: 2px solid var(--line);
+      border: 1px solid var(--soft-line);
       margin-bottom: 16px;
     }
 
     details.filter-fold > summary {
       padding: 9px 14px;
-      font-size: 0.94rem;
-      font-weight: 700;
+      font-size: 0.92rem;
+      font-weight: 600;
       cursor: pointer;
       list-style: none;
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #eef0f3;
+      color: var(--text);
     }
 
     details.filter-fold > summary::-webkit-details-marker {
@@ -198,7 +261,7 @@
       padding: 12px 14px;
       border-top: 1px solid var(--soft-line);
       display: grid;
-      grid-template-columns: 1fr 220px auto;
+      grid-template-columns: 1fr 220px;
       gap: 10px;
       align-items: center;
     }
@@ -212,48 +275,62 @@
     }
 
     .chip-btn {
-      padding: 3px 9px;
+      padding: 4px 9px;
       font-size: 0.82rem;
-      border: 1px solid var(--line);
-      background: #f3f4f6;
-      font-weight: 600;
+      border: 1px solid var(--soft-line);
+      background: #f8fafc;
+      color: var(--text);
+      font-weight: 500;
     }
 
     .chip-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: var(--line);
+      border-color: var(--line);
       color: #ffffff;
     }
 
+    /* 不可点击的板块标题 */
     .section-title {
       font-size: 1.15rem;
       font-weight: 700;
-      margin: 22px 0 10px;
+      margin: 26px 0 12px;
       padding-left: 10px;
-      border-left: 5px solid var(--line);
+      border-left: 4px solid var(--line);
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       flex-wrap: wrap;
       gap: 8px;
+      cursor: default;
+    }
+
+    .section-title.sub-section {
+      border-left-color: var(--soft-line);
+      color: #222222;
+    }
+
+    .secondary-block {
+      margin-top: 24px;
+      padding-top: 4px;
     }
 
     details.fold-box {
-      background: var(--surface);
-      border: 2px solid var(--line);
-      margin-top: 16px;
+      background: #fafafa;
+      border: 1px solid var(--soft-line);
+      margin-top: 14px;
     }
 
     details.fold-box > summary {
-      padding: 11px 15px;
-      font-size: 1.02rem;
-      font-weight: 700;
+      padding: 10px 14px;
+      font-size: 0.94rem;
+      font-weight: 600;
       cursor: pointer;
       list-style: none;
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #eef0f3;
+      color: var(--text);
     }
 
     details.fold-box > summary::-webkit-details-marker {
@@ -263,21 +340,15 @@
     .fold-body {
       padding: 14px 15px;
       border-top: 1px solid var(--soft-line);
+      background: var(--surface);
     }
 
-    details.fold-box#planFold {
-      border-color: var(--plan);
-    }
     details.fold-box#planFold > summary {
       color: var(--plan);
       background: var(--plan-bg);
     }
-    details.fold-box#planFold > summary,
-    details.fold-box#infoFold > summary {
-      font-weight: normal;
-    }
 
-    /* 卡片视图：严格分两区（上区：个人静态档案，下区：动态时间与联系） */
+    /* 卡片视图：仅最紧急超期显示红边，其余保持统一克制边框 */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -286,7 +357,7 @@
 
     .card {
       background: var(--surface);
-      border: 2px solid var(--line);
+      border: 1.5px solid var(--soft-line);
       padding: 13px;
       display: flex;
       flex-direction: column;
@@ -294,8 +365,10 @@
       gap: 10px;
     }
 
-    .card.due { border-color: var(--danger); }
-    .card.planned { border-color: var(--plan); }
+    .card.due {
+      border-color: var(--danger);
+      border-width: 2px;
+    }
 
     .card-profile-zone {
       display: flex;
@@ -312,25 +385,27 @@
 
     .person-name {
       margin: 0;
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       font-weight: 700;
+      cursor: default;
     }
 
-    .status-badge {
+    /* 状态指示：纯静态文本，无边框，避免误以为可点 */
+    .status-label {
       font-size: 0.82rem;
       font-weight: 700;
-      padding: 2px 8px;
-      border: 1.5px solid var(--line);
-      background: #f3f4f6;
+      padding: 2px 6px;
+      background: transparent;
       white-space: nowrap;
+      cursor: default;
     }
 
-    .status-badge.ok { color: var(--ok); border-color: var(--ok); background: var(--ok-bg); }
-    .status-badge.warn { color: var(--warn); border-color: var(--warn); background: var(--warn-bg); }
-    .status-badge.due { color: var(--danger); border-color: var(--danger); background: var(--danger-bg); }
-    .status-badge.plan { color: var(--plan); border-color: var(--plan); background: var(--plan-bg); }
+    .status-label.ok { color: var(--ok); }
+    .status-label.warn { color: var(--warn); }
+    .status-label.due { color: var(--danger); }
+    .status-label.plan { color: var(--plan); }
+    .status-label.muted { color: var(--muted); font-weight: 600; }
 
-    /* 独立标签样式：与状态徽章、动态记录彻底区分 */
     .tag-row {
       display: flex;
       flex-wrap: wrap;
@@ -340,25 +415,25 @@
 
     .person-tag {
       font-size: 0.78rem;
-      font-weight: 600;
+      font-weight: 500;
       padding: 1px 6px;
-      background: #eef2ff;
-      color: #1e3a8a;
-      border: 1px solid #93c5fd;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      cursor: default;
     }
 
-    /* 独立个人备注样式：浅灰底+左侧实线，与时间记录区分 */
     .person-memo {
       font-size: 0.86rem;
-      color: #374151;
-      background: #f3f4f6;
+      color: var(--muted);
+      background: #f4f5f7;
       padding: 4px 8px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      cursor: default;
     }
 
-    /* 动态区分隔线 */
     .card-activity-zone {
       border-top: 1px dashed var(--soft-line);
       padding-top: 9px;
@@ -367,11 +442,11 @@
       gap: 7px;
     }
 
-    /* 图形化进度条 */
     .progress-wrap {
       display: flex;
       flex-direction: column;
       gap: 3px;
+      cursor: default;
     }
 
     .progress-labels {
@@ -384,9 +459,9 @@
 
     .bar-bg {
       width: 100%;
-      height: 12px;
+      height: 11px;
       background: #e5e7eb;
-      border: 1.5px solid var(--line);
+      border: 1px solid var(--soft-line);
       overflow: hidden;
     }
 
@@ -397,29 +472,36 @@
 
     .activity-box {
       font-size: 0.86rem;
-      /* padding: 4px 8px; */
-      /* border: 1px solid var(--soft-line); */
-      background: #ffffff;
+      color: var(--muted);
+      background: transparent;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      cursor: default;
     }
 
     .activity-box.plan-box {
-      border: 1.5px solid var(--plan);
       background: var(--plan-bg);
       color: var(--plan);
-      font-weight: 700;
+      font-weight: 600;
+      padding: 3px 7px;
     }
 
     .card-btns {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
+      margin-top: 2px;
     }
 
-    .card-btns button {
+    .card-btns button.primary {
+      flex: 1.4;
+    }
+
+    .card-btns button.secondary-action {
       flex: 1;
+      border-color: var(--soft-line);
+      font-weight: 500;
     }
 
     /* 列表视图 */
@@ -431,7 +513,7 @@
 
     .row-item {
       background: var(--surface);
-      border: 2px solid var(--line);
+      border: 1.5px solid var(--soft-line);
       padding: 11px 14px;
       display: grid;
       grid-template-columns: 210px 1fr auto;
@@ -439,8 +521,10 @@
       align-items: center;
     }
 
-    .row-item.due { border-color: var(--danger); }
-    .row-item.planned { border-color: var(--plan); }
+    .row-item.due {
+      border-color: var(--danger);
+      border-width: 2px;
+    }
 
     .row-profile {
       display: flex;
@@ -459,8 +543,9 @@
     }
 
     .row-name {
-      font-size: 1.08rem;
+      font-size: 1.06rem;
       font-weight: 700;
+      cursor: default;
     }
 
     .row-activity {
@@ -472,12 +557,17 @@
 
     .row-actions {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
-      flex-direction: row-reverse;
+      align-items: center;
     }
 
-    /* 精简视图：纯姓名 + 状态 + 操作，无标签无备注 */
+    .row-actions button.secondary-action {
+      border-color: var(--soft-line);
+      font-weight: 500;
+    }
+
+    /* 精简视图 */
     .compact-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -486,31 +576,17 @@
 
     .compact-item {
       background: var(--surface);
-      border: 2px solid var(--line);
-      padding: 8px 10px;
+      border: 1.5px solid var(--soft-line);
+      padding: 9px 11px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 7px;
     }
 
-    .fold-body .compact-item {
-      border-color:  var(--soft-line);
+    .compact-item.due {
+      border-color: var(--danger);
+      border-width: 2px;
     }
-
-    @media only screen and (max-width: 760px) {
-      .compact-item {
-        flex-direction: row;
-        justify-content: space-between;
-      }
-      .compact-actions {
-        max-width: 50%;
-        flex-direction: row-reverse;
-        justify-content: flex-start;
-      }
-    }
-
-    .compact-item.due { border-color: var(--danger); }
-    .compact-item.planned { border-color: var(--plan); }
 
     .compact-top {
       display: flex;
@@ -525,6 +601,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      cursor: default;
     }
 
     .compact-actions {
@@ -534,8 +611,8 @@
 
     .compact-actions button {
       flex: 1;
-      padding: 5px 8px;
-      font-size: 0.84rem;
+      padding: 6px 8px;
+      font-size: 0.86rem;
     }
 
     /* 弹窗 */
@@ -570,7 +647,7 @@
       align-items: center;
       padding-bottom: 10px;
       margin-bottom: 14px;
-      border-bottom: 2px solid var(--line);
+      border-bottom: 1.5px solid var(--line);
     }
 
     .modal-top h2 {
@@ -580,20 +657,14 @@
     }
 
     .field {
-      margin-bottom: 12px;
+      margin-bottom: 13px;
     }
 
     .field label {
       display: block;
       font-size: 0.92rem;
       font-weight: 700;
-      margin-bottom: 5px;
-    }
-
-    @media (max-width: 760px) {
-      .two-col {
-        margin-bottom: 12px;
-      }
+      margin-bottom: 6px;
     }
 
     input[type="text"],
@@ -609,7 +680,7 @@
       color: var(--text);
       background: var(--input-bg);
       border: 1px solid var(--soft-line);
-      border-left: 4px solid var(--line);
+      border-left: 3px solid var(--soft-line);
     }
 
     textarea {
@@ -621,6 +692,7 @@
       outline: 2px solid var(--accent);
       outline-offset: 1px;
       background: #ffffff;
+      border-left: 3px solid var(--line);
     }
 
     .two-col {
@@ -629,8 +701,37 @@
       gap: 12px;
     }
 
+    .profile-save-row {
+      margin-top: 4px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .danger-zone {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--soft-line);
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .plan-action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row-reverse;
+    }
+
+    .plan-action-main {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .plan-banner {
-      border: 2px solid var(--plan);
+      border: 1.5px solid var(--plan);
       color: var(--plan);
       background: var(--plan-bg);
       padding: 10px 12px;
@@ -638,7 +739,7 @@
     }
 
     .backup-box {
-      border: 2px solid var(--line);
+      border: 1.5px solid var(--soft-line);
       background: #f8fafc;
       padding: 12px;
       margin-bottom: 16px;
@@ -666,19 +767,19 @@
     .history-list {
       margin-top: 16px;
       padding-top: 14px;
-      border-top: 2px dotted var(--soft-line);
+      border-top: 1px dashed var(--soft-line);
     }
 
     .history-entry {
       border: 1px solid var(--soft-line);
       background: #fafafa;
-      padding: 9px 12px;
+      padding: 10px 12px;
       margin-bottom: 8px;
       cursor: pointer;
     }
 
     .history-entry.expanded {
-      border: 2px solid var(--line);
+      border: 1.5px solid var(--line);
       background: #ffffff;
     }
 
@@ -692,19 +793,20 @@
     }
 
     .entry-note {
-      margin-top: 3px;
+      margin-top: 4px;
       font-size: 0.88rem;
       color: var(--muted);
     }
 
     .entry-del-box {
-      margin-top: 8px;
-      padding-top: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
       border-top: 1px dashed var(--soft-line);
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
-      flex-direction: row-reverse;
+      justify-content: flex-start;
+      flex-wrap: wrap;
     }
 
     .empty-msg {
@@ -713,18 +815,84 @@
       font-size: 0.94rem;
     }
 
-    @media (max-width: 760px) {
-      .two-col, .filter-body {
-        grid-template-columns: 1fr;
+    @media only screen and (max-width: 760px) {
+      .container {
+        padding: 14px 12px 96px;
       }
+
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .view-group {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .two-col,
+      .filter-body {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
       .row-item {
         grid-template-columns: 1fr;
+        gap: 10px;
       }
+
       .row-profile {
         border-right: none;
         border-bottom: 1px dashed var(--soft-line);
         padding-right: 0;
         padding-bottom: 8px;
+      }
+
+      .row-actions {
+        justify-content: stretch;
+      }
+
+      .row-actions button {
+        flex: 1;
+      }
+
+      .compact-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .compact-actions {
+        flex: 0 0 auto;
+      }
+
+      .compact-actions button {
+        padding: 6px 12px;
+      }
+
+      .plan-action-row,
+      .plan-action-main {
+        flex-direction: column;
+      }
+      .plan-action-row,
+      .plan-action-main,
+      .danger-zone,
+      .entry-del-box {
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      .method-pill {
+        padding: 9px 8px;
       }
     }
   </style>
@@ -748,7 +916,7 @@
       </div>
     </header>
 
-    <div class="notice-box" id="topNotice"></div>
+    <div class="notice-bar" id="topNotice"></div>
 
     <!-- 过期未核对的未来预定 -->
     <div class="pending-box" id="overduePlansBox" style="display:none;">
@@ -759,18 +927,17 @@
     <!-- 折叠的检索与标签筛选 -->
     <details class="filter-fold" id="filterFold">
       <summary>
-        <span>🔍 查找与地点/标签筛选</span>
+        <span>🔍 查找与标签筛选</span>
         <span id="filterSummaryBadge" style="font-size:0.84rem; color:var(--muted);">全部</span>
       </summary>
       <div class="filter-body">
-        <input type="text" id="searchInput" oninput="renderAll()" placeholder="输入姓名、地点/标签或备注..." />
+        <input type="text" id="searchInput" oninput="renderAll()" placeholder="输入姓名、标签或备注..." />
         <select id="tagFilter" onchange="renderAll()">
-          <option value="">全部地点 / 标签</option>
+          <option value="">全部标签</option>
         </select>
         <div class="tag-chips" id="quickTagChips"></div>
-        <span></span>
-        <div style="display: flex; flex-direction: row-reverse; justify-content: space-between;">
-          <button type="button" class="danger  small" onclick="resetFilters()" style="max-width: 50%;">清空</button>
+        <div style="grid-column: 1 / -1; display:flex; justify-content:flex-end;">
+          <button type="button" class="danger small" onclick="resetAllFilters()">清空筛选</button>
         </div>
       </div>
     </details>
@@ -781,21 +948,21 @@
     </h2>
     <div id="activeArea"></div>
 
-    <details class="fold-box" id="frequentFold">
-      <summary>
+    <section class="secondary-block">
+      <h2 class="section-title sub-section">
         <span>有共同事务频频往来</span>
-        <span id="frequentCount">0 人</span>
-      </summary>
-      <div class="fold-body" id="frequentArea"></div>
-    </details>
+        <span style="font-size:0.88rem; font-weight:600; color:var(--muted);" id="frequentCount">0 人</span>
+      </h2>
+      <div id="frequentArea"></div>
+    </section>
 
-    <details class="fold-box" id="holidayFold">
-      <summary>
+    <section class="secondary-block">
+      <h2 class="section-title sub-section">
         <span>节日问候</span>
-        <span id="holidayCount">0 人</span>
-      </summary>
-      <div class="fold-body" id="holidayArea"></div>
-    </details>
+        <span style="font-size:0.88rem; font-weight:600; color:var(--muted);" id="holidayCount">0 人</span>
+      </h2>
+      <div id="holidayArea"></div>
+    </section>
   </div>
 
   <!-- 记一次 + 预定 + 档案 + 历史记录弹窗 -->
@@ -815,11 +982,12 @@
             <input type="date" id="recDate" required />
           </div>
           <div class="field">
-            <label for="recMethod">方式</label>
-            <select id="recMethod">
-              <option value="见面">🤝 见面</option>
-              <option value="聊天">💬 聊天</option>
-            </select>
+            <label>方式</label>
+            <div class="method-pills" role="group" aria-label="记录方式">
+              <button type="button" class="method-pill active" id="recMethodMeet" onclick="setMethodValue('recMethod', '见面')">🤝 见面</button>
+              <button type="button" class="method-pill" id="recMethodChat" onclick="setMethodValue('recMethod', '聊天')">💬 聊天</button>
+            </div>
+            <input type="hidden" id="recMethod" value="见面" />
           </div>
         </div>
         <div class="field">
@@ -842,20 +1010,23 @@
               <input type="date" id="planDate" />
             </div>
             <div class="field">
-              <label for="planMethod">预定方式</label>
-              <select id="planMethod">
-                <option value="见面">🤝 见面</option>
-                <option value="聊天">💬 聊天</option>
-              </select>
+              <label>预定方式</label>
+              <div class="method-pills" role="group" aria-label="预定方式">
+                <button type="button" class="method-pill active" id="planMethodMeet" onclick="setMethodValue('planMethod', '见面')">🤝 见面</button>
+                <button type="button" class="method-pill" id="planMethodChat" onclick="setMethodValue('planMethod', '聊天')">💬 聊天</button>
+              </div>
+              <input type="hidden" id="planMethod" value="见面" />
             </div>
           </div>
           <div class="field">
             <label for="planNote">预定说明（可不填）</label>
             <input type="text" id="planNote" placeholder="例如：一起吃晚饭" />
           </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button type="button" class="primary small" onclick="savePersonPlan()">保存预定</button>
-            <button type="button" class="plan-btn small" onclick="completePlanToLog()">转为已发生</button>
+          <div class="plan-action-row">
+            <div class="plan-action-main">
+              <button type="button" class="plan-btn small" onclick="completePlanToLog()">转为已发生</button>
+              <button type="button" class="primary small" onclick="savePersonPlan()">保存预定</button>
+            </div>
             <button type="button" class="danger small" onclick="clearPersonPlan()">取消预定</button>
           </div>
         </div>
@@ -894,8 +1065,10 @@
               <input type="number" id="editDays" min="1" max="365" value="30" />
             </div>
           </div>
-          <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+          <div class="profile-save-row">
             <button type="button" class="primary small" onclick="updatePersonProfile()">保存设置</button>
+          </div>
+          <div class="danger-zone">
             <button type="button" class="danger small" onclick="removeCurrentPerson()">删除此人</button>
           </div>
         </div>
@@ -928,6 +1101,7 @@
           <label for="addProfileNote">个人备注（可不填）</label>
           <textarea id="addProfileNote" placeholder="公司、关系、兴趣方向、可发内容"></textarea>
         </div>
+        <hr>
         <div class="two-col">
           <div class="field">
             <label for="addGroup">所属板块</label>
@@ -948,11 +1122,12 @@
             <input type="date" id="addDate" required />
           </div>
           <div class="field">
-            <label for="addMethod">上次方式</label>
-            <select id="addMethod">
-              <option value="见面">🤝 见面</option>
-              <option value="聊天">💬 聊天</option>
-            </select>
+            <label>上次方式</label>
+            <div class="method-pills" role="group" aria-label="上次联系方式">
+              <button type="button" class="method-pill active" id="addMethodMeet" onclick="setMethodValue('addMethod', '见面')">🤝 见面</button>
+              <button type="button" class="method-pill" id="addMethodChat" onclick="setMethodValue('addMethod', '聊天')">💬 聊天</button>
+            </div>
+            <input type="hidden" id="addMethod" value="见面" />
           </div>
         </div>
         <div class="field">
@@ -979,7 +1154,7 @@
         <div class="field">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
             <label style="margin:0;">选择人员（已选 <span id="batchSelectedCount">0</span> 人）</label>
-            <button type="button" class="small" onclick="clearBatchSelection()">清空已选</button>
+            <button type="button" class="danger small" onclick="clearBatchSelection()">清空已选</button>
           </div>
           <div class="check-list" id="batchCandidatesArea"></div>
         </div>
@@ -989,11 +1164,12 @@
             <input type="date" id="batchDate" required />
           </div>
           <div class="field">
-            <label for="batchMethod">方式</label>
-            <select id="batchMethod">
-              <option value="见面">🤝 见面</option>
-              <option value="聊天">💬 聊天</option>
-            </select>
+            <label>方式</label>
+            <div class="method-pills" role="group" aria-label="批量记录方式">
+              <button type="button" class="method-pill active" id="batchMethodMeet" onclick="setMethodValue('batchMethod', '见面')">🤝 见面</button>
+              <button type="button" class="method-pill" id="batchMethodChat" onclick="setMethodValue('batchMethod', '聊天')">💬 聊天</button>
+            </div>
+            <input type="hidden" id="batchMethod" value="见面" />
           </div>
         </div>
         <div class="field">
@@ -1013,7 +1189,6 @@
         <button class="small" onclick="closeModal('syncModal')">关闭</button>
       </div>
 
-      <!-- 本地 JSON 备份与汇入 -->
       <div class="backup-box">
         <div style="font-weight:700; margin-bottom:6px;">本地档案备份（推荐定期导出保存）</div>
         <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
@@ -1061,6 +1236,26 @@
     let armedDeleteIndex = null;
     let currentView = localStorage.getItem(VIEW_KEY) || "card";
     let batchSelectedIds = new Set();
+    let quickStatusFilter = null; // null | "due" | "planned"
+
+    const METHOD_PILL_MAP = {
+      recMethod: ["recMethodMeet", "recMethodChat"],
+      planMethod: ["planMethodMeet", "planMethodChat"],
+      addMethod: ["addMethodMeet", "addMethodChat"],
+      batchMethod: ["batchMethodMeet", "batchMethodChat"]
+    };
+
+    function setMethodValue(inputId, val) {
+      const normalized = val === "聊天" ? "聊天" : "见面";
+      const hidden = document.getElementById(inputId);
+      if (hidden) hidden.value = normalized;
+      const pair = METHOD_PILL_MAP[inputId];
+      if (!pair) return;
+      const meetBtn = document.getElementById(pair[0]);
+      const chatBtn = document.getElementById(pair[1]);
+      if (meetBtn) meetBtn.classList.toggle("active", normalized === "见面");
+      if (chatBtn) chatBtn.classList.toggle("active", normalized === "聊天");
+    }
 
     const FESTIVALS = [
       { name: "元旦", date: "2027-01-01" },
@@ -1218,7 +1413,6 @@
       }
     }
 
-    /* 导出与汇入备份档案 */
     function exportBackupFile() {
       const list = loadPeople();
       const payload = {
@@ -1369,6 +1563,36 @@
       }
     }
 
+    function isPersonOverdue(person, now) {
+      const hasFuturePlan = Boolean(person.plan && person.plan.date >= now);
+      if (hasFuturePlan) return false;
+      const elapsed = Math.max(0, daysBetween(person.lastDate, now));
+      if (person.group === "active") {
+        return elapsed > person.days;
+      }
+      if (person.group === "holiday") {
+        const info = getFestivalInfo(person, now);
+        return info.due;
+      }
+      return false;
+    }
+
+    function hasPersonFuturePlan(person, now) {
+      return Boolean(person.plan && person.plan.date >= now);
+    }
+
+    function toggleQuickStatusFilter(type) {
+      quickStatusFilter = quickStatusFilter === type ? null : type;
+      renderAll();
+    }
+
+    function resetAllFilters() {
+      quickStatusFilter = null;
+      document.getElementById("searchInput").value = "";
+      document.getElementById("tagFilter").value = "";
+      renderAll();
+    }
+
     function getFestivalInfo(person, now) {
       const next = FESTIVALS
         .map(f => ({ ...f, left: daysBetween(now, f.date) }))
@@ -1415,13 +1639,13 @@
       renderAll();
     }
 
-    function resetFilters() {
-      document.getElementById("searchInput").value = "";
-      document.getElementById("tagFilter").value = "";
-      renderAll();
-    }
-
-    function matchesFilter(person, query, selectedTag) {
+    function matchesFilter(person, query, selectedTag, now) {
+      if (quickStatusFilter === "due" && !isPersonOverdue(person, now)) {
+        return false;
+      }
+      if (quickStatusFilter === "planned" && !hasPersonFuturePlan(person, now)) {
+        return false;
+      }
       if (selectedTag && !person.tags.includes(selectedTag)) {
         return false;
       }
@@ -1440,9 +1664,11 @@
     function renderFilterControls(people, query, selectedTag) {
       const badge = document.getElementById("filterSummaryBadge");
       const activeParts = [];
+      if (quickStatusFilter === "due") activeParts.push("超期");
+      if (quickStatusFilter === "planned") activeParts.push("预定");
       if (selectedTag) activeParts.push(`# ${selectedTag}`);
       if (query) activeParts.push(`🔍 ${query}`);
-      badge.textContent = activeParts.length ? activeParts.join(" · ") : "全部";
+      badge.textContent = activeParts.length ? activeParts.join(" ") : "全部";
 
       const tagCounts = new Map();
       for (const p of people) {
@@ -1454,7 +1680,7 @@
       const selectEl = document.getElementById("tagFilter");
       const currentVal = selectEl.value;
 
-      selectEl.innerHTML = `<option value="">全部地点 / 标签</option>` +
+      selectEl.innerHTML = `<option value="">全部标签</option>` +
         sortedTags.map(([t, cnt]) => `<option value="${escapeText(t)}">${escapeText(t)}（${cnt}）</option>`).join("");
       selectEl.value = sortedTags.some(([t]) => t === currentVal) ? currentVal : "";
 
@@ -1490,7 +1716,7 @@
             <div>
               <strong>${escapeText(p.name)}</strong>（${escapeText(p.plan.date)} ${icon}${notePart}）
             </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button type="button" class="primary small" onclick="resolvePlan('${p.id}', true)">✓ 已赴约</button>
               <button type="button" class="small" onclick="resolvePlan('${p.id}', false)">✕ 取消预定</button>
             </div>
@@ -1519,14 +1745,13 @@
       renderAll();
     }
 
-    /* 精简视图：绝对不显示标签和备注 */
     function renderCompactItem(item) {
-      const { person, due, planned, tagClass, tagText } = item;
+      const { person, due, labelClass, labelText } = item;
       return `
-        <div class="compact-item ${due ? "due" : ""} ${planned ? "planned" : ""}">
+        <div class="compact-item ${due ? "due" : ""}">
           <div class="compact-top">
             <span class="compact-name">${escapeText(person.name)}</span>
-            <span class="status-badge ${tagClass}">${escapeText(tagText)}</span>
+            <span class="status-label ${labelClass}">${escapeText(labelText)}</span>
           </div>
           <div class="compact-actions">
             <button type="button" class="primary" onclick="openRecordModal('${person.id}')">记一次</button>
@@ -1535,9 +1760,8 @@
       `;
     }
 
-    /* 卡片与列表视图：档案区与动态区完全分离，图形进度条直观呈现 */
     function renderPersonItem(item) {
-      const { person, due, planned, tagClass, tagText, percent, barColor, barLeft, barRight, latestBrief, extraBtn } = item;
+      const { person, due, planned, labelClass, labelText, percent, barColor, barLeft, barRight, latestBrief, extraBtn } = item;
 
       const tagsHtml = person.tags.length
         ? `<div class="tag-row">${person.tags.map(t => `<span class="person-tag"># ${escapeText(t)}</span>`).join("")}</div>`
@@ -1560,18 +1784,18 @@
       `;
 
       const planHtml = planned
-        ? `<div class="activity-box plan-box">📅 ${escapeText(person.plan.date.slice(5))} ${person.plan.method === "见面" ? "🤝" : "💬"}${person.plan.note ? ` ${escapeText(person.plan.note)}` : ""}</div>`
+        ? `<div class="activity-box plan-box">📅${person.plan.method === "见面" ? "🤝" : "💬"}${escapeText(person.plan.date.slice(5))}${person.plan.note ? ` · ${escapeText(person.plan.note)}` : ""}</div>`
         : "";
 
       const lastHtml = `<div class="activity-box">${escapeText(latestBrief)}</div>`;
 
       if (currentView === "list") {
         return `
-          <div class="row-item ${due ? "due" : ""} ${planned ? "planned" : ""}">
+          <div class="row-item ${due ? "due" : ""}">
             <div class="row-profile">
               <div class="row-name-line">
                 <span class="row-name">${escapeText(person.name)}</span>
-                <span class="status-badge ${tagClass}">${escapeText(tagText)}</span>
+                <span class="status-label ${labelClass}">${escapeText(labelText)}</span>
               </div>
               ${tagsHtml}
               ${memoHtml}
@@ -1590,11 +1814,11 @@
       }
 
       return `
-        <div class="card ${due ? "due" : ""} ${planned ? "planned" : ""}">
+        <div class="card ${due ? "due" : ""}">
           <div class="card-profile-zone">
             <div class="card-head">
               <h3 class="person-name">${escapeText(person.name)}</h3>
-              <span class="status-badge ${tagClass}">${escapeText(tagText)}</span>
+              <span class="status-label ${labelClass}">${escapeText(labelText)}</span>
             </div>
             ${tagsHtml}
             ${memoHtml}
@@ -1642,27 +1866,58 @@
       const query = document.getElementById("searchInput").value.trim();
       const selectedTag = document.getElementById("tagFilter").value;
 
+      // 统计全局“超期”与“未来预定”数量
+      let dueTotal = 0;
+      let plannedTotal = 0;
+      for (const p of allPeople) {
+        if (isPersonOverdue(p, now)) dueTotal++;
+        if (hasPersonFuturePlan(p, now)) plannedTotal++;
+      }
+
+      if (quickStatusFilter === "due" && dueTotal === 0) quickStatusFilter = null;
+      if (quickStatusFilter === "planned" && plannedTotal === 0) quickStatusFilter = null;
+
+      // 渲染顶部状态栏：静态日期 + 可点击筛选按钮
+      const noticeEl = document.getElementById("topNotice");
+      const dueBtnHtml = dueTotal > 0
+        ? `<button type="button" class="quick-filter-btn due-filter ${quickStatusFilter === "due" ? "active" : ""}" onclick="toggleQuickStatusFilter('due')">${dueTotal}人超期</button>`
+        : `<span class="notice-static">无超期</span>`;
+
+      const planBtnHtml = plannedTotal > 0
+        ? `<button type="button" class="quick-filter-btn plan-filter ${quickStatusFilter === "planned" ? "active" : ""}" onclick="toggleQuickStatusFilter('planned')">📅 ${plannedTotal}项预定</button>`
+        : "";
+
+      const clearQuickHtml = quickStatusFilter
+        ? `<button type="button" class="small" onclick="toggleQuickStatusFilter(quickStatusFilter)">显示全部</button>`
+        : "";
+
+      noticeEl.innerHTML = `
+        <span class="notice-static">今天 ${now}</span>
+        <div>
+        ${dueBtnHtml}
+        ${planBtnHtml ? `${planBtnHtml}` : ""}
+        ${clearQuickHtml}
+        </div>
+      `;
+
       renderFilterControls(allPeople, query, selectedTag);
       renderOverduePlans(allPeople, now);
 
-      const filteredPeople = allPeople.filter(p => matchesFilter(p, query, selectedTag));
+      const filteredPeople = allPeople.filter(p => matchesFilter(p, query, selectedTag, now));
 
       const activeItems = [];
       const frequentItems = [];
       const holidayItems = [];
-      let dueTotal = 0;
-      let plannedTotal = 0;
       let holidayDueTotal = 0;
 
       for (const p of filteredPeople) {
         const elapsed = Math.max(0, daysBetween(p.lastDate, now));
-        const hasFuturePlan = Boolean(p.plan && p.plan.date >= now);
-        if (hasFuturePlan) plannedTotal++;
+        const hasFuturePlan = hasPersonFuturePlan(p, now);
 
         const latest = p.logs[0];
         const methodIcon = latest ? (latest.method === "见面" ? "🤝" : "💬") : "🕒";
         const latestBrief = latest
-          ? `${methodIcon} ${latest.date.slice(5)}${latest.note ? ` · ${latest.note}` : ""}`
+          ? `${methodIcon}${latest.date.slice(5)}${latest.note ? ` · ${latest.note}` : ""}`
           : `🕒 ${p.lastDate.slice(5)}`;
 
         if (p.group === "holiday") {
@@ -1673,8 +1928,8 @@
             due: info.due,
             planned: hasFuturePlan,
             sortKey: info.due ? 1 : 0,
-            tagClass: hasFuturePlan ? "plan" : (info.due ? "due" : "ok"),
-            tagText: hasFuturePlan ? `📅 ${p.plan.date.slice(5)}` : info.badge,
+            labelClass: hasFuturePlan ? "plan" : (info.due ? "due" : "ok"),
+            labelText: hasFuturePlan ? `📅 ${p.plan.date.slice(5)}` : info.badge,
             percent: hasFuturePlan ? 100 : info.percent,
             barColor: hasFuturePlan ? "var(--plan)" : (info.due ? "var(--danger)" : "var(--ok)"),
             barLeft: info.leftLabel,
@@ -1688,35 +1943,34 @@
             due: false,
             planned: hasFuturePlan,
             sortKey: -elapsed,
-            tagClass: hasFuturePlan ? "plan" : "",
-            tagText: hasFuturePlan ? `📅 ${p.plan.date.slice(5)}` : `${elapsed}天前`,
+            labelClass: hasFuturePlan ? "plan" : "muted",
+            labelText: hasFuturePlan ? `📅 ${p.plan.date.slice(5)}` : `${elapsed}天前`,
             percent: freqPercent,
-            barColor: hasFuturePlan ? "var(--plan)" : "#4b5563",
+            barColor: hasFuturePlan ? "var(--plan)" : "#64748b",
             barLeft: `${elapsed}天前`,
             barRight: "常联系",
             latestBrief,
-            extraBtn: `<button class="small" onclick="moveToActive('${p.id}')">转入需维系</button>`
+            extraBtn: `<button class="small secondary-action" onclick="moveToActive('${p.id}')">转入需维系</button>`
           });
         } else {
           const ratio = elapsed / p.days;
           const percent = Math.min(100, Math.round(ratio * 100));
           let due = false;
-          let tagClass = "ok";
-          let tagText = `剩 ${Math.max(0, p.days - elapsed)}天`;
+          let labelClass = "ok";
+          let labelText = `剩 ${Math.max(0, p.days - elapsed)}天`;
           let barColor = "var(--ok)";
 
           if (hasFuturePlan) {
-            tagClass = "plan";
-            tagText = `📅 ${p.plan.date.slice(5)}`;
+            labelClass = "plan";
+            labelText = `📅 ${p.plan.date.slice(5)}`;
             barColor = "var(--plan)";
           } else if (elapsed > p.days) {
             due = true;
-            dueTotal++;
-            tagClass = "due";
-            tagText = `超 ${elapsed - p.days}天`;
+            labelClass = "due";
+            labelText = `超 ${elapsed - p.days}天`;
             barColor = "var(--danger)";
           } else if (ratio >= 0.7) {
-            tagClass = "warn";
+            labelClass = "warn";
             barColor = "var(--warn)";
           }
 
@@ -1725,8 +1979,8 @@
             due,
             planned: hasFuturePlan,
             sortKey: hasFuturePlan ? -0.5 : ratio,
-            tagClass,
-            tagText,
+            labelClass,
+            labelText,
             percent,
             barColor,
             barLeft: `${elapsed} / ${p.days}天`,
@@ -1740,38 +1994,32 @@
       frequentItems.sort((a, b) => b.sortKey - a.sortKey);
       holidayItems.sort((a, b) => b.sortKey - a.sortKey);
 
-      const parts = [`今天 ${now}`];
-      if (dueTotal > 0) parts.push(`${dueTotal} 人超期`);
-      else parts.push("无超期");
-      if (plannedTotal > 0) parts.push(`📅 ${plannedTotal} 项预定`);
-      document.getElementById("topNotice").textContent = parts.join(" · ");
-
+      const filterSuffix = quickStatusFilter === "due"
+        ? " · 仅看超期"
+        : (quickStatusFilter === "planned" ? " · 仅看预定" : "");
       const viewLabel = currentView === "compact" ? "精简" : (currentView === "list" ? "列表" : "卡片");
-      document.getElementById("activeSummaryTip").textContent = `${activeItems.length} 人 · ${viewLabel}`;
+      document.getElementById("activeSummaryTip").textContent = `${activeItems.length} 人 · ${viewLabel}${filterSuffix}`;
 
       renderSection(
         document.getElementById("activeArea"),
         activeItems,
-        "没有匹配的「需主动维系」人员。"
+        quickStatusFilter === "due" ? "当前没有超期的「需主动维系」人员。" : "没有匹配的「需主动维系」人员。"
       );
 
       document.getElementById("frequentCount").textContent = `${frequentItems.length} 人`;
       renderSection(
         document.getElementById("frequentArea"),
         frequentItems,
-        "暂无「有共同事务频频往来」的人员。"
+        "暂无匹配的「有共同事务频频往来」人员。"
       );
 
       document.getElementById("holidayCount").textContent = holidayDueTotal > 0
         ? `${holidayDueTotal} 人待问候`
         : `${holidayItems.length} 人`;
-      if (holidayDueTotal > 0) {
-        document.getElementById("holidayFold").open = true;
-      }
       renderSection(
         document.getElementById("holidayArea"),
         holidayItems,
-        "暂无「节日问候」的人员。"
+        "暂无匹配的「节日问候」人员。"
       );
     }
 
@@ -1785,7 +2033,7 @@
 
       document.getElementById("recordModalTitle").textContent = person.name;
       document.getElementById("recDate").value = todayStr();
-      document.getElementById("recMethod").value = "见面";
+      setMethodValue("recMethod", "见面");
       document.getElementById("recNote").value = "";
 
       const banner = document.getElementById("currentPlanBanner");
@@ -1793,12 +2041,12 @@
       if (person.plan) {
         banner.style.display = "block";
         banner.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+          <div class="plan-action-row">
             <div>
               <strong>📅 已预定：</strong>${escapeText(person.plan.date)} · ${escapeText(person.plan.method)}
               ${person.plan.note ? `（${escapeText(person.plan.note)}）` : ""}
             </div>
-            <div style="display:flex; gap:6px;">
+            <div class="plan-action-main">
               <button type="button" class="plan-btn small" onclick="completePlanToLog()">✓ 转为已发生</button>
               <button type="button" class="danger small" onclick="clearPersonPlan()">✕ 取消预定</button>
             </div>
@@ -1806,13 +2054,13 @@
         `;
         planStatus.textContent = `已预定 ${person.plan.date}`;
         document.getElementById("planDate").value = person.plan.date;
-        document.getElementById("planMethod").value = person.plan.method;
+        setMethodValue("planMethod", person.plan.method);
         document.getElementById("planNote").value = person.plan.note;
       } else {
         banner.style.display = "none";
         planStatus.textContent = "未预定";
         document.getElementById("planDate").value = todayStr();
-        document.getElementById("planMethod").value = "见面";
+        setMethodValue("planMethod", "见面");
         document.getElementById("planNote").value = "";
       }
 
@@ -1923,8 +2171,8 @@
               <div class="entry-del-box" onclick="event.stopPropagation()">
                 ${!isArmed
                   ? `<button type="button" class="danger small" onclick="armDelete(${idx})">删除这条</button>`
-                  : `<button type="button" class="danger small" onclick="confirmDeleteLog(${idx})">确认删除</button>
-                     <button type="button" class="small" onclick="cancelDelete()">取消</button>`
+                  : `<button type="button" class="small" onclick="cancelDelete()">取消</button>
+                     <button type="button" class="danger small" onclick="confirmDeleteLog(${idx})">确认删除</button>`
                 }
               </div>
             ` : ""}
@@ -2013,7 +2261,7 @@
       document.getElementById("addGroup").value = "active";
       document.getElementById("addDays").value = "30";
       document.getElementById("addDate").value = todayStr();
-      document.getElementById("addMethod").value = "见面";
+      setMethodValue("addMethod", "见面");
       document.getElementById("addNote").value = "";
       toggleDaysField("addGroup", "addDaysField");
       document.getElementById("addModal").classList.add("open");
@@ -2052,7 +2300,7 @@
       batchSelectedIds = new Set();
       document.getElementById("batchFilterInput").value = "";
       document.getElementById("batchDate").value = todayStr();
-      document.getElementById("batchMethod").value = "见面";
+      setMethodValue("batchMethod", "见面");
       document.getElementById("batchNote").value = "";
       renderBatchCandidates();
       document.getElementById("batchModal").classList.add("open");
